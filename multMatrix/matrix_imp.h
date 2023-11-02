@@ -7,7 +7,7 @@
 #include "multmatrix.h"
 
 class matrix_imp {
-private:
+private: 
     int clientId = -1;
     multMatrix* m = nullptr;
 
