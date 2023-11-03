@@ -38,8 +38,6 @@ int initServer(int port)
     return sock_fd;
 }
 
-
-
 connection_t initClient(std::string host, int port)
 {
     int sock_out = 0;

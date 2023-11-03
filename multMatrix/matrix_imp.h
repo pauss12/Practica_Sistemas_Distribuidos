@@ -6,92 +6,104 @@
 #include "operaciones.h"
 #include "multmatrix.h"
 
-class matrix_imp {
-private: 
-    int clientId = -1;
-    multMatrix* m = nullptr;
+class matrix_imp{
 
-public:
-    matrix_imp(int clientId) : clientId(clientId) {}
+	private: 
+		int clientId = -1;
+		multMatrix* m = nullptr;
 
-    bool connectionClosed() {
-        return p == nullptr;
-    }
+	public:
+	
+		matrix_imp(int clientId) : clientId(clientId) {}
 
-    void recibeOp() {
-        std::vector<unsigned char> rpcIn;
-        std::vector<unsigned char> rpcOut;
-        // Recibe operación
-        recvMSG(clientId, rpcIn);
+		bool connectionClosed() {
+			return p == nullptr;
+		}
 
-        // Desempaqueta la operación
-        personaOp operacion = unpack<personaOp>(rpcIn);
+		void recibeOp() {
+			
+			std::vector<unsigned char> rpcIn;
+			std::vector<unsigned char> rpcOut;
+			
+			recvMSG(clientId, rpcIn);
 
-        // Realiza la operación correspondiente
-        switch (operacion) {
-        case ConstructorOp:
-            if (m) {
-                delete m;
-                m = nullptr;
-            }
-            m = new multMatrix();
-            pack(rpcOut, (unsigned char)MSG_OK);
-            break;
-        case DestructorOp:
-            if (m) {
-                delete m;
-                m = nullptr;
-                pack(rpcOut, (unsigned char)MSG_OK);
-            } else {
-                std::cout << "La instancia de multMatrix no está creada" << std::endl;
-                pack(rpcOut, (unsigned char)MSG_NOK);
-            }
-            break;
-        case ReadMatrixOp:
-            if (m) {
-                const char* fileName = /* Obtener el nombre del archivo de algún lugar */;
-                matrix_t* result = m->readMatrix(fileName);
-                if (result) {
-                    // Realizar operaciones con la matriz leída
-                    // Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
-                    pack(rpcOut, (unsigned char)MSG_OK);
-                } else {
-                    std::cout << "Error al leer la matriz desde el archivo" << std::endl;
-                    pack(rpcOut, (unsigned char)MSG_NOK);
-                }
-            } else {
-                std::cout << "La instancia de multMatrix no está creada" << std::endl;
-                pack(rpcOut, (unsigned char)MSG_NOK);
-            }
-            break;
-        case MultMatricesOp:
-            if (m) {
-                // Obtener las matrices m1 y m2 desde algún lugar
-                matrix_t* m1 = /* Obtener la primera matriz */;
-                matrix_t* m2 = /* Obtener la segunda matriz */;
+			operacionesEnum operacion = unpack<operacionesEnum>(rpcIn);
 
-                matrix_t* result = m->multMatrices(m1, m2);
-                if (result) {
-                    // Realizar operaciones con la matriz resultante
-                    // Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
-                    pack(rpcOut, (unsigned char)MSG_OK);
-                } else {
-                    std::cout << "Error al multiplicar las matrices" << std::endl;
-                    pack(rpcOut, (unsigned char)MSG_NOK);
-                }
-            } else {
-                std::cout << "La instancia de multMatrix no está creada" << std::endl;
-                pack(rpcOut, (unsigned char)MSG_NOK);
-            }
-            break;
-        // Otras operaciones
-        default:
-            std::cout << "Error: función no definida" << std::endl;
-            pack(rpcOut, (unsigned char)MSG_NOK);
-            break;
-        }
+			switch (operacion) {
+				
+				case ConstructorOp:
+				{
 
-        // Envía resultados
-        sendMSG(clientId, rpcOut);
-    }
+					m = new multMatrix();
+					pack(rpcOut, (unsigned char)MSG_OK);
+					
+				}break;
+					
+				case DestructorOp:
+				{
+					if (m) {
+						delete m;
+						m = nullptr;
+						pack(rpcOut, (unsigned char)MSG_OK);
+					} else {
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+					
+				}break;
+					
+				case ReadMatrixOp:
+				{
+					if (m) {
+						const char* fileName = /* Obtener el nombre del archivo de algún lugar */;
+						matrix_t* result = m->readMatrix(fileName);
+						if (result) {
+							// Realizar operaciones con la matriz leída
+							// Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
+							pack(rpcOut, (unsigned char)MSG_OK);
+						} else {
+							std::cout << "Error al leer la matriz desde el archivo" << std::endl;
+							pack(rpcOut, (unsigned char)MSG_NOK);
+						}
+					} else {
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+					
+				}break;
+					
+				case MultMatricesOp:
+				{
+					if (m) {
+						// Obtener las matrices m1 y m2 desde algún lugar
+						matrix_t* m1 = /* Obtener la primera matriz */;
+						matrix_t* m2 = /* Obtener la segunda matriz */;
+
+						matrix_t* result = m->multMatrices(m1, m2);
+						
+						if (result) {
+							// Realizar operaciones con la matriz resultante
+							// Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
+							pack(rpcOut, (unsigned char)MSG_OK);
+						}else {
+							
+							std::cout << "Error al multiplicar las matrices" << std::endl;
+							pack(rpcOut, (unsigned char)MSG_NOK);
+						}
+					} else {
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+				
+				}break;
+				
+				default:
+				{
+					std::cout << "Error: función no definida" << std::endl;
+					pack(rpcOut, (unsigned char)MSG_NOK);
+				}break;
+			}
+
+			sendMSG(clientId, rpcOut);
+		};
 };

@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "utils.h"
+
 /**
  * @brief multMatrix::multMatrix Constructor de la clase multMatrix.
  * No tiene parámetros y sólo inicializa el generador de números aleatorios
@@ -86,16 +88,16 @@ matrix_t *multMatrix::multMatrices(matrix_t *m1, matrix_t* m2)
  * @param m Matriz cuyos datos se escribirán en fichero
  * @param fileName Nombre del fichero a generar
  */
-void multMatrix::writeMatrix(matrix_t *m,const char* fileName)
+void multMatrix::writeMatrix(matrix_t *m, const char* fileName)
 {
- FILE* f=fopen(fileName,"w");
- fprintf(f,"%d %d\n",m->rows,m->cols);
+	FILE* f=fopen(fileName,"w");
+	fprintf(f,"%d %d\n",m->rows,m->cols);
 
- for(int i=0;i<m->rows*m->cols;i++)
-     {
-         fprintf(f,"%d\n",m->data[i]);
-     }
- fclose(f);
+	for(int i=0;i<m->rows*m->cols;i++)
+	{
+		fprintf(f,"%d\n",m->data[i]);
+	}
+	fclose(f);
 }
 
 /**
