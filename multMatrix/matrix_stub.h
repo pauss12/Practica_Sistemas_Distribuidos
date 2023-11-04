@@ -62,3 +62,31 @@ class multMatrix_stub
 			close(serverConnection.serverId);
 		};
 };
+
+	 void multiplicarMatrices(matrix_t matrizA, matrix_t matrizB) {
+        sendMatrixOp(serverConnection.serverId, matrizA, matrizB, multiplicarMatricesOp);
+    }
+
+	matrix_t leerMatriz(const std::string& rutaArchivo) {
+        matrix_t matriz;
+        recvMatrixOp(serverConnection.serverId, matriz, rutaArchivo, leerMatrizOp);
+        return matriz;
+    }
+
+    void escribirMatriz(const matrix_t& matriz, const std::string& rutaArchivo) {
+        sendMatrixOp(serverConnection.serverId, matriz, rutaArchivo, escribirMatrizOp);
+    }
+
+    matrix_t crearIdentidad(int filas, int columnas) {
+        sendMatrixSizeOp(serverConnection.serverId, filas, columnas, crearIdentidadOp);
+        matrix_t matriz;
+        recvMatrixOp(serverConnection.serverId, matriz, "", crearIdentidadOp);
+        return matriz;
+    }
+
+    matrix_t crearRandom(int filas, int columnas, int rangoMin, int rangoMax) {
+        sendRandomMatrixOp(serverConnection.serverId, filas, columnas, rangoMin, rangoMax, crearRandomOp);
+        matrix_t matriz;
+        recvMatrixOp(serverConnection.serverId, matriz, "", crearRandomOp);
+        return matriz;
+    }

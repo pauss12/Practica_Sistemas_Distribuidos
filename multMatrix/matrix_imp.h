@@ -51,7 +51,7 @@ class matrix_imp{
 					}
 					
 				}break;
-/*					
+			
 				case opLeerMatriz:
 				{
 					if (m) {
@@ -75,10 +75,6 @@ class matrix_imp{
 				case opMultiplicarMatrices:
 				{
 					if (m) {
-						// Obtener las matrices m1 y m2 desde algún lugar
-						//matrix_t* m1 =  Obtener la primera matriz ;
-						//matrix_t* m2 =  Obtener la segunda matriz ;
-
 						matrix_t* result = m->multMatrices(m1, m2);
 						
 						if (result) {
@@ -96,7 +92,70 @@ class matrix_imp{
 					}
 				
 				}break;
-		*/		
+
+              case opCrearIdentidad:
+                {
+                    int rows = unpack<int>(rpcIn);
+                    int cols = unpack<int>(rpcIn);
+
+                    if (rows > 0 && cols > 0) {
+                        matrix_t* identityMatrix = p->createIdentity(rows, cols);
+
+                        if (identityMatrix) {
+                            packMatrix(rpcOut, identityMatrix);
+                            pack(rpcOut, (unsigned char)MSG_OK);
+
+                            freeMatrix(identityMatrix);
+                        } else {
+                            pack(rpcOut, (unsigned char)MSG_NOK);
+                        }
+                    } else {
+                        pack(rpcOut, (unsigned char)MSG_NOK);
+                    }
+                } break;
+
+
+             case opCrearRandom:
+            {
+                int rows = unpack<int>(rpcIn);
+                int cols = unpack<int>(rpcIn);
+
+                if (rows > 0 && cols > 0) {  
+                    matrix_t* randomMatrix = p->createRandMatrix(rows, cols);
+
+                    if (randomMatrix) {
+                        packMatrix(rpcOut, randomMatrix);
+                        pack(rpcOut, (unsigned char)MSG_OK);
+
+                        // Libera la memoria de la matriz aleatoria
+                        freeMatrix(randomMatrix);
+                    } else {
+                        pack(rpcOut, (unsigned char)MSG_NOK);
+                    }
+                } else {
+                    pack(rpcOut, (unsigned char)MSG_NOK);
+                }
+            }break;
+
+            case opLeerMatriz:
+            {
+             if (m) {
+                matrix_t* matrixToWrite = unpackMatrix(rpcIn);
+
+                 if (matrixToWrite) {
+                   
+                    p->writeMatrix(matrixToWrite, fileName);
+                    pack(rpcOut, (unsigned char)MSG_OK);
+
+                    freeMatrix(matrixToWrite);
+                } else {
+                    pack(rpcOut, (unsigned char)MSG_NOK);
+                }
+            } else {
+                pack(rpcOut, (unsigned char)MSG_NOK);
+            }
+            }break;
+
 				default:
 				{
 					std::cout << "Error: función no definida" << std::endl;
@@ -106,4 +165,4 @@ class matrix_imp{
 
 			sendMSG(clientId, rpcOut);
 		};
-};
+};                          
