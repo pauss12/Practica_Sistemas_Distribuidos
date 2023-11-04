@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "operaciones.h"
+#include "multmatrix.h"
 
 class multMatrix_stub
 {

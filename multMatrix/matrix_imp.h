@@ -14,7 +14,7 @@ class matrix_imp{
 
 	public:
 	
-		matrix_imp(int clientId) : clientId(clientId) {}
+		matrix_imp(int clientId) : clientId(clientId) {};
 
 		bool connectionClosed() {
 			return m == nullptr;
@@ -31,31 +31,31 @@ class matrix_imp{
 
 			switch (operacion) {
 				
-				case ConstructorOp:
+				case opConstructor:
 				{
-
 					m = new multMatrix();
 					pack(rpcOut, (unsigned char)MSG_OK);
 					
 				}break;
 					
-				case DestructorOp:
+				case opDestructor:
 				{
 					if (m) {
+						
 						delete m;
-						m = nullptr;
 						pack(rpcOut, (unsigned char)MSG_OK);
+						
 					} else {
 						std::cout << "La instancia de multMatrix no está creada" << std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
 					
 				}break;
-					
-				case ReadMatrixOp:
+/*					
+				case opLeerMatriz:
 				{
 					if (m) {
-						const char* fileName = /* Obtener el nombre del archivo de algún lugar */;
+						const char* fileName =  Obtener el nombre del archivo de algún lugar ;
 						matrix_t* result = m->readMatrix(fileName);
 						if (result) {
 							// Realizar operaciones con la matriz leída
@@ -72,12 +72,12 @@ class matrix_imp{
 					
 				}break;
 					
-				case MultMatricesOp:
+				case opMultiplicarMatrices:
 				{
 					if (m) {
 						// Obtener las matrices m1 y m2 desde algún lugar
-						matrix_t* m1 = /* Obtener la primera matriz */;
-						matrix_t* m2 = /* Obtener la segunda matriz */;
+						//matrix_t* m1 =  Obtener la primera matriz ;
+						//matrix_t* m2 =  Obtener la segunda matriz ;
 
 						matrix_t* result = m->multMatrices(m1, m2);
 						
@@ -96,7 +96,7 @@ class matrix_imp{
 					}
 				
 				}break;
-				
+		*/		
 				default:
 				{
 					std::cout << "Error: función no definida" << std::endl;

@@ -8,6 +8,20 @@
 #include <thread>	
 #include "matrix_imp.h"
 
+void atiendeCliente(int idCliente){
+	
+	//Crear interfaz de servidor
+	matrix_imp imp = matrix_imp(idCliente);
+	//Mientras no cerre conexion
+	do{
+		//Atiende operacion
+		imp.recibeOp();
+		
+	}while(!imp.connectionClosed());
+	//Va a estar en el while hasta que se invoque al destructor
+}
+
+
 int main(int argc, char** argv)
 {
 	//iniciar un servidor

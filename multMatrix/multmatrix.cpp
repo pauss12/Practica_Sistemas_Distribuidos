@@ -114,6 +114,7 @@ matrix_t* multMatrix::createRandMatrix(int rows, int cols)
     m->rows=rows;
     m->cols=cols;
     m->data=new int[rows*cols];
+	
     for(int i=0;i<rows*cols;i++)
         m->data[i]=rand();
 

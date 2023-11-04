@@ -8,13 +8,39 @@
 typedef enum{
 	opConstructor=1,
 	opDestructor=2,
-	opMultiplicar=3,
+	opMultiplicarMatrices=3,
 	opCrearIdentidad=4,
 	opCrearRandom=5,
 	opEscribirMatriz=6,
 	opLeerMatriz=7
 	
 }operacionesEnum;
+
+template<typename T>
+inline void pack(std::vector<unsigned char> &packet, T data) {
+
+	int size = packet.size();
+	unsigned char *ptr = (unsigned char*)&data;
+	packet.resize(size + sizeof(T));
+	std::copy(ptr, ptr + sizeof(T), packet.begin() + size);
+}
+
+template<typename T>
+inline T unpack(std::vector<unsigned char> &packet){	
+	T data;
+	int dataSize=sizeof(T);
+	int packetSize=packet.size();
+	T* ptr=(T*)packet.data();
+	data=ptr[0];
+	
+	for(int i=dataSize;i<packetSize;i++)
+	{
+		packet[i-dataSize]=packet[i];	
+	}
+	
+	packet.resize(packetSize-dataSize);
+	return data;
+}
 
 /*
 typedef struct __attribute__((packed))
@@ -52,14 +78,7 @@ typedef struct __attribute__((packed))
 	};
 }operacion_t;
 
-template<typename T>
-inline void pack(std::vector<unsigned char> &packet, T data) {
 
-	int size = packet.size();
-	unsigned char *ptr = (unsigned char*)&data;
-	packet.resize(size + sizeof(T));
-	std::copy(ptr, ptr + sizeof(T), packet.begin() + size);
-}
 
 //EMPAQUETAR UN ARRAY ------------------------------------------------------------------------------
 template<typename T>
