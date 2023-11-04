@@ -8,7 +8,7 @@
 #include "utils.h"
 #include "operaciones.h"
 
-class multMatrix
+class multMatrix_stub
 {
 	private:
 		//std::string ip = "172.31.51.119";
@@ -18,7 +18,7 @@ class multMatrix
 		
 	public:
 	
-		multMatrix()
+		multMatrix_stub()
 		{
 			serverConnection = initClient(ip, port);
 			
@@ -41,7 +41,7 @@ class multMatrix
 		};
 		
 		//Lo q hace el destructor es cerrar la conexion
-		~multMatrix(){
+		~multMatrix_stub(){
 			
 			operacionesEnum op = opDestructor;
 			

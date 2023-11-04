@@ -17,7 +17,7 @@ class matrix_imp{
 		matrix_imp(int clientId) : clientId(clientId) {}
 
 		bool connectionClosed() {
-			return p == nullptr;
+			return m == nullptr;
 		}
 
 		void recibeOp() {

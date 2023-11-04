@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include "multmatrix.h"
-
 #include "matrix_stub.h"
 
 void freeMatrix(matrix_t* m){
@@ -13,8 +11,8 @@ void freeMatrix(matrix_t* m){
 
 int main()
 {
-    multMatrix* mmatrix=new multMatrix();
-/*
+    multMatrix_stub* mmatrix=new multMatrix_stub();
+
     matrix_t* m1= mmatrix->createRandMatrix(5,5);
     matrix_t* m2= mmatrix->createIdentity(5,5);
     matrix_t* mres=mmatrix->multMatrices(m1,m2);
@@ -28,6 +26,6 @@ int main()
     freeMatrix(mres);
     freeMatrix(m3);
     freeMatrix(mres2);
-	*/
+
     delete mmatrix;
 }

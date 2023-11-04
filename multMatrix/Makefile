@@ -163,6 +163,33 @@ main_multMatrix.cpp.s:
 	$(MAKE) -f CMakeFiles/clienteMultMatrix.dir/build.make CMakeFiles/clienteMultMatrix.dir/main_multMatrix.cpp.s
 .PHONY : main_multMatrix.cpp.s
 
+main_serverMatrix.o: main_serverMatrix.cpp.o
+
+.PHONY : main_serverMatrix.o
+
+# target to build an object file
+main_serverMatrix.cpp.o:
+	$(MAKE) -f CMakeFiles/serverMultMatrix.dir/build.make CMakeFiles/serverMultMatrix.dir/main_serverMatrix.cpp.o
+.PHONY : main_serverMatrix.cpp.o
+
+main_serverMatrix.i: main_serverMatrix.cpp.i
+
+.PHONY : main_serverMatrix.i
+
+# target to preprocess a source file
+main_serverMatrix.cpp.i:
+	$(MAKE) -f CMakeFiles/serverMultMatrix.dir/build.make CMakeFiles/serverMultMatrix.dir/main_serverMatrix.cpp.i
+.PHONY : main_serverMatrix.cpp.i
+
+main_serverMatrix.s: main_serverMatrix.cpp.s
+
+.PHONY : main_serverMatrix.s
+
+# target to generate assembly for a file
+main_serverMatrix.cpp.s:
+	$(MAKE) -f CMakeFiles/serverMultMatrix.dir/build.make CMakeFiles/serverMultMatrix.dir/main_serverMatrix.cpp.s
+.PHONY : main_serverMatrix.cpp.s
+
 multmatrix.o: multmatrix.cpp.o
 
 .PHONY : multmatrix.o
@@ -236,6 +263,9 @@ help:
 	@echo "... main_multMatrix.o"
 	@echo "... main_multMatrix.i"
 	@echo "... main_multMatrix.s"
+	@echo "... main_serverMatrix.o"
+	@echo "... main_serverMatrix.i"
+	@echo "... main_serverMatrix.s"
 	@echo "... multmatrix.o"
 	@echo "... multmatrix.i"
 	@echo "... multmatrix.s"
