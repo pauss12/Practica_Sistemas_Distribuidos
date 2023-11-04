@@ -9,5 +9,5 @@ add_executable (clienteMultMatrix main_multMatrix.cpp multmatrix.cpp multmatrix.
 target_link_libraries(clienteMultMatrix pthread)
 
 project(serverMultMatrix LANGUAGES CXX)
-add_executable(serverMultMatrix utils.h utils.cpp multmatrix.cpp multmatrix.h matrix_stub.h operaciones.h)
+add_executable(serverMultMatrix main_serverMatrix.cpp utils.h utils.cpp multmatrix.cpp multmatrix.h matrix_stub.h operaciones.h)
 target_link_libraries(serverMultMatrix pthread)
