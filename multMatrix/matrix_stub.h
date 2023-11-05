@@ -10,16 +10,24 @@
 #include "multmatrix.h"
 
 
-void sendMatrixOp(int serverId, const matrix_t& matrizA, const matrix_t& matrizB, operacionesEnum op) {
+// Función para enviar una operación de matriz al servidor
+void sendMatrixOp(int serverId, operacionesEnum op, const matrix_t& matrix) {
     std::vector<unsigned char> rpcOut;
-    // Empaqueta  la operación
+    // Empaquetar la operación
     pack(rpcOut, op);
 
-    // Empaquetar las matrices
-    packMatrix(rpcOut, matrizA.data, matrizA.rows, matrizA.cols);
-    packMatrix(rpcOut, matrizB.data, matrizB.rows, matrizB.cols);
+    // Empaquetar el número de filas y columnas
+    pack(rpcOut, matrix.rows);
+    pack(rpcOut, matrix.cols);
 
-    // Envía la operación y las matrices al servidor
+    // Empaquetar los datos de la matriz
+    for (int i = 0; i < matrix.rows; i++) {
+        for (int j = 0; j < matrix.cols; j++) {
+            pack(rpcOut, matrix.data[i * matrix.cols + j]);
+        }
+    }
+
+    // Envía la operación y la matriz al servidor
     sendMSG(serverId, rpcOut);
 }
 
@@ -53,6 +61,7 @@ void recvMatrixOp(int serverId, matrix_t& matriz, const std::string& rutaArchivo
         matriz.data[i] = unpack<int>(rpcIn);
     }
 }
+
 
 
 class multMatrix_stub
@@ -111,7 +120,7 @@ class multMatrix_stub
 		};
 };
 /*
-	 void multiplicarMatrices(matrix_t matrizA, matrix_t matrizB) {
+	void multiplicarMatrices(matrix_t matrizA, matrix_t matrizB) {
 			 
         sendMatrixOp(serverConnection.serverId, matrizA, matrizB, opMultiplicarMatrices);
     }
@@ -126,17 +135,12 @@ class multMatrix_stub
         sendMatrixOp(matriz, rutaArchivo, opEscribirMatriz);
     }
 
-    matrix_t crearIdentidad(int filas, int columnas) {
-        sendMatrixSizeOp(filas, columnas, opCrearIdentidad);
-        matrix_t matriz;
-        recvMatrixOp(matriz, "", opCrearIdentidad);
-        return matriz;
-    }
+  	matrix_t crearIdentidad(int filas, int columnas) {
+    	return sendMatrixOp(opCrearIdentidad, filas, columnas, 0, 0, "");
+}
 
-    matrix_t crearRandom(int filas, int columnas, int rangoMin, int rangoMax) {
-        sendRandomMatrixOp(serverConnection.serverId, filas, columnas, rangoMin, rangoMax, opCrearRandom);
-        matrix_t matriz;
-        recvMatrixOp(serverConnection.serverId, matriz, "", opCrearRandom);
-        return matriz;
-    }
+	matrix_t crearRandom(int filas, int columnas, int rangoMin, int rangoMax) {
+		return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
+	}
+
 */
