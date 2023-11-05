@@ -14,10 +14,7 @@ class matrix_imp{
 
 	public:
 	
-		matrix_imp(int clientId) : clientId(clientId) {
-			
-			std::cout<<"soy el constructor"<<std::endl;
-		};
+		matrix_imp(int clientId) : clientId(clientId) {};
 
 		bool connectionClosed() {
 			return m == nullptr;
@@ -29,7 +26,6 @@ class matrix_imp{
 			std::vector<unsigned char> rpcOut;
 			
 			recvMSG(clientId, rpcIn);
-			std::cout<<"el imp ha recibido la operacion"<<std::endl;
 
 			operacionesEnum operacion = unpack<operacionesEnum>(rpcIn);
 
@@ -55,7 +51,7 @@ class matrix_imp{
 					}
 					
 				}break;
-			/*
+	
 				case opLeerMatriz:
 				{
 					if (m) {
@@ -97,7 +93,7 @@ class matrix_imp{
 				
 				}break;
 
-              case opCrearIdentidad:
+				case opCrearIdentidad:
                 {
                     int rows = unpack<int>(rpcIn);
                     int cols = unpack<int>(rpcIn);
@@ -118,47 +114,47 @@ class matrix_imp{
                     }
                 } break;
 
-             case opCrearRandom:
-            {
-                int rows = unpack<int>(rpcIn);
-                int cols = unpack<int>(rpcIn);
+				case opCrearRandom:
+				{
+					int rows = unpack<int>(rpcIn);
+					int cols = unpack<int>(rpcIn);
 
-                if (rows > 0 && cols > 0) {  
-                    matrix_t* randomMatrix = p->createRandMatrix(rows, cols);
+					if (rows > 0 && cols > 0) {  
+						matrix_t* randomMatrix = p->createRandMatrix(rows, cols);
 
-                    if (randomMatrix) {
-                        packMatrix(rpcOut, randomMatrix);
-                        pack(rpcOut, (unsigned char)MSG_OK);
+						if (randomMatrix) {
+							packMatrix(rpcOut, randomMatrix);
+							pack(rpcOut, (unsigned char)MSG_OK);
 
-                        // Libera la memoria de la matriz aleatoria
-                        freeMatrix(randomMatrix);
-                    } else {
-                        pack(rpcOut, (unsigned char)MSG_NOK);
-                    }
-                } else {
-                    pack(rpcOut, (unsigned char)MSG_NOK);
-                }
-            }break;
+							// Libera la memoria de la matriz aleatoria
+							freeMatrix(randomMatrix);
+						} else {
+							pack(rpcOut, (unsigned char)MSG_NOK);
+						}
+					} else {
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+				}break;
 
-            case opLeerMatriz:
-            {
-             if (m) {
-                matrix_t* matrixToWrite = unpackMatrix(rpcIn);
+				case opLeerMatriz:
+				{
+				 if (m) {
+					matrix_t* matrixToWrite = unpackMatrix(rpcIn);
 
-                 if (matrixToWrite) {
-                   
-                    p->writeMatrix(matrixToWrite, fileName);
-                    pack(rpcOut, (unsigned char)MSG_OK);
+					 if (matrixToWrite) {
+					   
+						p->writeMatrix(matrixToWrite, fileName);
+						pack(rpcOut, (unsigned char)MSG_OK);
 
-                    freeMatrix(matrixToWrite);
-                } else {
-                    pack(rpcOut, (unsigned char)MSG_NOK);
-                }
-            } else {
-                pack(rpcOut, (unsigned char)MSG_NOK);
-            }
-            }break;
-*/
+						freeMatrix(matrixToWrite);
+					} else {
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+				} else {
+					pack(rpcOut, (unsigned char)MSG_NOK);
+				}
+				}break;
+				
 				default:
 				{
 					std::cout << "Error: función no definida" << std::endl;
@@ -166,6 +162,6 @@ class matrix_imp{
 				}break;
 			}
 
-			sendMSG(clientId, rpcOut);
+				sendMSG(clientId, rpcOut);
 		};
 };                          

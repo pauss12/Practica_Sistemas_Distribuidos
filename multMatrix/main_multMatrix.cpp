@@ -11,9 +11,7 @@ void freeMatrix(matrix_t* m){
 
 int main()
 {
-    multMatrix_stub* mmatrix=new multMatrix_stub
-	
-	//~multMatrix_stub(mmatrix);
+    multMatrix_stub* mmatrix=new multMatrix_stub();
 /*
     matrix_t* m1= mmatrix->crearRandom(5,5);
     matrix_t* m2= mmatrix->crearIdentidad(5,5);
