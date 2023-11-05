@@ -72,7 +72,7 @@ multMatrix_stub recvMatrixOp(int serverId, const std::string& rutaArchivo, opera
 	return matriz;
 }
 
-//MANDAR UNA CADENA DE CLIENTE A SERVER---------------------------------------------------------------------
+//MANDAR UNA CADENA ---------------------------------------------------------------------
 void sendStringOp(int serverId, std::string dato, personaOp op)
 {
 	std::vector<unsigned char> rpcOut;
@@ -91,31 +91,6 @@ void sendStringOp(int serverId, std::string dato, personaOp op)
 	if (rpcIn[0] != MSG_OK)
 		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";	
 }
-
-
-//RECIBIR UNA CADENA DE CLIENTE A SERVER---------------------------------------------------------------------
-void recvStringOp(int serverId, std::string &dato, personaOp op)
-{
-	std::vector<unsigned char> rpcOut;
-	std::vector<unsigned char> rpcIn;
-
-	pack(rpcOut, op);	
-	sendMSG(serverId, rpcOut);
-	
-	recvMSG(serverId, rpcIn);
-	unsigned char ok = unpack<unsigned char>(rpcIn);
-	if (ok != MSG_OK)
-	{
-		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
-	}else{
-		
-		//Desempaqueto el tamaño de la cadena
-		int tam = unpack<int>(rpcIn);
-		dato.resize(tam);				
-		unpackv(rpcIn, (char*)dato.data(), tam);
-	}
-}
-
 
 //CLASE MULTMATRIX DEL CLIENTE -----------------------------------------------------------------
 class multMatrix_stub
@@ -194,17 +169,38 @@ class multMatrix_stub
 };
 
 
-/*
-	void multiplicarMatrices(matrix_t matrizA, matrix_t matrizB) {
-			 
-        sendMatrixOp(serverConnection.serverId, matrizA, matrizB, opMultiplicarMatrices);
-    }
 
+	multMatrix_stub multiplicarMatrices(const multMatrix_stub& matrizA, const multMatrix_stub& matrizB) {
+		// Empaquetar las matrices A y B
+		sendMatrixOp(matrizA, opMultiplicarMatrices);
+		sendMatrixOp(matrizB, opMultiplicarMatrices);
+
+		// Comprobar que se han enviado bien
+		recvMSG(serverConnection.serverId, rpcIn);
+
+		if (rpcIn[0] != MSG_OK)
+			std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+
+		// Crear la matriz para recibir el resultado del servidor
+		multMatrix_stub resultado;
+		resultado = recvMatrixOp(serverConnection.serverId, "", opMultiplicarMatrices);
+
+		return resultado;
+	}
+
+
+    void escribirMatriz(const multMatrix_stub& matriz, const std::string& rutaArchivo) {
+		// Empaquetar la matriz y la ruta del archivo
+		sendMatrixOp(matriz, opEscribirMatriz);
+		sendStringOp(serverConnection.serverId, rutaArchivo, opEscribirMatriz);
+
+		// Comprobar que se han enviado bien
+		recvMSG(serverConnection.serverId, rpcIn);
+
+		if (rpcIn[0] != MSG_OK)
+			std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+	}
 	
-
-    void escribirMatriz(const matrix_t& matriz, const std::string& rutaArchivo) {
-        sendMatrixOp(matriz, rutaArchivo, opEscribirMatriz);
-    }
 
   	matrix_t crearIdentidad(int filas, int columnas) {
     	return sendMatrixOp(opCrearIdentidad, filas, columnas, 0, 0, "");
@@ -214,4 +210,3 @@ class multMatrix_stub
 		return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
 	}
 
-*/
