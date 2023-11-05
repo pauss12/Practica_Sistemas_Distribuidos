@@ -9,6 +9,52 @@
 #include "operaciones.h"
 #include "multmatrix.h"
 
+
+void sendMatrixOp(int serverId, const matrix_t& matrizA, const matrix_t& matrizB, operacionesEnum op) {
+    std::vector<unsigned char> rpcOut;
+    // Empaqueta  la operación
+    pack(rpcOut, op);
+
+    // Empaquetar las matrices
+    packMatrix(rpcOut, matrizA.data, matrizA.rows, matrizA.cols);
+    packMatrix(rpcOut, matrizB.data, matrizB.rows, matrizB.cols);
+
+    // Envía la operación y las matrices al servidor
+    sendMSG(serverId, rpcOut);
+}
+
+
+void recvMatrixOp(int serverId, matrix_t& matriz, const std::string& rutaArchivo, operacionesEnum op) {
+    std::vector<unsigned char> rpcIn;
+    std::vector<unsigned char> rpcOut;
+    
+    // Empaqueta la operación
+    pack(rpcOut, op);
+    
+    if (op == leerMatrizOp) {
+        pack(rpcOut, static_cast<int>(rutaArchivo.size()));
+        packv(rpcOut, rutaArchivo.data(), rutaArchivo.size());
+    }
+
+    // Envía la operación y otros parámetros al servidor
+    sendMSG(serverId, rpcOut);
+
+    // Recibe la respuesta del servidor
+    recvMSG(serverId, rpcIn);
+
+    // Desempaqueta la matriz
+    int rows, cols;
+    rows = unpack<int>(rpcIn);
+    cols = unpack<int>(rpcIn);
+    matriz.rows = rows;
+    matriz.cols = cols;
+    matriz.data = new int[rows * cols];
+    for (int i = 0; i < rows * cols; i++) {
+        matriz.data[i] = unpack<int>(rpcIn);
+    }
+}
+
+
 class multMatrix_stub
 {
 	private:
