@@ -25,6 +25,14 @@ inline void pack(std::vector<unsigned char> &packet, T data) {
 	std::copy(ptr, ptr + sizeof(T), packet.begin() + size);
 }
 
+//EMPAQUETAR UN ARRAY ------------------------------------------------------------------------------
+template<typename T>
+inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
+	
+	for(int i=0;i<dataSize;i++)
+		pack(packet, data[i]);
+}
+
 template<typename T>
 inline T unpack(std::vector<unsigned char> &packet){	
 	T data;
@@ -40,6 +48,13 @@ inline T unpack(std::vector<unsigned char> &packet){
 	
 	packet.resize(packetSize-dataSize);
 	return data;
+}
+
+template<typename T>
+inline void unpackv(std::vector<unsigned char>&packet,T* data, int dataSize){
+	
+	for(int i=0;i<dataSize;i++)
+		data[i]=unpack<T>(packet);
 }
 
 //EMPAQUETAR LA MATRIZ ----------------------------------------------------------------------------
@@ -59,12 +74,35 @@ inline void packMatrix(std::vector<unsigned char> &packet, T *data, int rows, in
 
 }
 
-//EMPAQUETAR UN ARRAY ------------------------------------------------------------------------------
+//DESEMPAQUETAR ENTEROS --------------------------------------------------------------------------------
+inline int unpackInt(std::vector<unsigned char> &packet) {
+
+  // Determinar el tamaño del entero.
+  int dataSize = sizeof(int);
+
+  // Leer el entero del vector de bytes.
+  int data = 0;
+  for (int i = 0; i < dataSize; i++) {
+    data |= packet[i] << (8 * (dataSize - i - 1));
+  }
+
+  return data;
+}
+
+//DESEMPAQUETAR UNA MATRIZ -----------------------------------------------------------------------------------
 template<typename T>
-inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
-	
-	for(int i=0;i<dataSize;i++)
-		pack(packet, data[i]);
+inline void unpackMatrix(std::vector<unsigned char> &packet, T *data, int rows, int cols) {
+
+	// Desempaquetar el número de filas y columnas de la matriz.
+	int numRows = unpackInt(packet);
+	int numCols = unpackInt(packet);
+
+	// Desempaquetar los datos de la matriz.
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			data[i * cols + j] = unpackInt(packet);
+		}
+	}
 }
 
 /*

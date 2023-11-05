@@ -54,24 +54,38 @@ class matrix_imp{
 	
 				case opLeerMatriz:
 				{
-					if (m) {
-						//const char* fileName =  Obtener el nombre del archivo de algún lugar ;
-						matrix_t* result = m->readMatrix(fileName);
-						if (result) {
-							// Realizar operaciones con la matriz leída
-							// Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
-							pack(rpcOut, (unsigned char)MSG_OK);
-						} else {
-							std::cout << "Error al leer la matriz desde el archivo" << "\n"<< std::endl;
-							pack(rpcOut, (unsigned char)MSG_NOK);
-						}
-					} else {
+					if (m)
+					{
+						//Creo la variable para tener la ruta del archivo
+						const char *fileName;
+						matrix_t matriz_server;
+						
+						//Recibo la cadena con su tamaño y contenido
+						
+						//Envio el ok
+						pack(rpcOut, (unsigned char)MSG_OK);
+						
+						//Llamar a la funcion para que lea la matriz en el server
+						matriz_server = readMatrix(fileName);
+						
+						//Enviar la matriz
+						
+						
+						//Recibir el ok
+						recvMSG(serverConnection.clientId, rpcIn);
+				
+						if (rpcIn[0] != MSG_OK)
+							std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
+						
+					}else{
+						
 						std::cout << "La instancia de multMatrix no está creada" << "\n"<< std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
+						
 					}
 					
 				}break;
-					
+				/*	
 				case opMultiplicarMatrices:
 				{
 					if (m) {
@@ -154,7 +168,7 @@ class matrix_imp{
 					pack(rpcOut, (unsigned char)MSG_NOK);
 				}
 				}break;
-				
+			*/
 				default:
 				{
 					std::cout << "Error: función no definida" << std::endl;

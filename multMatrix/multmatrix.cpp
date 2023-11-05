@@ -39,9 +39,9 @@ matrix_t *multMatrix::readMatrix(const char *fileName)
     std::cout<<"Leidos fila y columna: "<<matrix->rows<<" "<<matrix->cols<<"\n";
     matrix->data=new int[matrix->rows*matrix->cols];
     for(int i=0;i<matrix->rows*matrix->cols;i++)
-        {
-            fscanf(f,"%d",&matrix->data[i]);
-        }
+    {
+        fscanf(f,"%d",&matrix->data[i]);
+    }
 
     fclose(f);
     return matrix;
