@@ -35,7 +35,7 @@ class multMatrix_stub
 			//Recibir OK (0: no okey, 1: Okey)
 			recvMSG(serverConnection.serverId, rpcIn);
 			
-			std::cout<<"EL CONSTRUCTOR FUNCIONA"<<std::endl;
+			std::cout<<"EL CONSTRUCTOR DEL CLIENTE FUNCIONA"<<std::endl;
 			
 			if (rpcIn[0] != MSG_OK)
 				std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
@@ -56,37 +56,41 @@ class multMatrix_stub
 			//Recibir OK (0: no okey, 1: Okey)
 			recvMSG(serverConnection.serverId, rpcIn);
 			
+			std::cout<<"EL DESTRUCTOR DEL CLIENTE FUNCIONA"<<std::endl;
+			
 			if (rpcIn[0] != MSG_OK)
 				std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
 			
 			close(serverConnection.serverId);
 		};
 };
-
+/*
 	 void multiplicarMatrices(matrix_t matrizA, matrix_t matrizB) {
-        sendMatrixOp(serverConnection.serverId, matrizA, matrizB, multiplicarMatricesOp);
+			 
+        sendMatrixOp(serverConnection.serverId, matrizA, matrizB, opMultiplicarMatrices);
     }
 
 	matrix_t leerMatriz(const std::string& rutaArchivo) {
         matrix_t matriz;
-        recvMatrixOp(serverConnection.serverId, matriz, rutaArchivo, leerMatrizOp);
+        recvMatrixOp(serverConnection.serverId, matriz, rutaArchivo, opLeerMatriz);
         return matriz;
     }
 
     void escribirMatriz(const matrix_t& matriz, const std::string& rutaArchivo) {
-        sendMatrixOp(serverConnection.serverId, matriz, rutaArchivo, escribirMatrizOp);
+        sendMatrixOp(matriz, rutaArchivo, opEscribirMatriz);
     }
 
     matrix_t crearIdentidad(int filas, int columnas) {
-        sendMatrixSizeOp(serverConnection.serverId, filas, columnas, crearIdentidadOp);
+        sendMatrixSizeOp(filas, columnas, opCrearIdentidad);
         matrix_t matriz;
-        recvMatrixOp(serverConnection.serverId, matriz, "", crearIdentidadOp);
+        recvMatrixOp(matriz, "", opCrearIdentidad);
         return matriz;
     }
 
     matrix_t crearRandom(int filas, int columnas, int rangoMin, int rangoMax) {
-        sendRandomMatrixOp(serverConnection.serverId, filas, columnas, rangoMin, rangoMax, crearRandomOp);
+        sendRandomMatrixOp(serverConnection.serverId, filas, columnas, rangoMin, rangoMax, opCrearRandom);
         matrix_t matriz;
-        recvMatrixOp(serverConnection.serverId, matriz, "", crearRandomOp);
+        recvMatrixOp(serverConnection.serverId, matriz, "", opCrearRandom);
         return matriz;
     }
+*/

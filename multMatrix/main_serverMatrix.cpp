@@ -8,35 +8,40 @@
 #include <thread>	
 #include "matrix_imp.h"
 
-void atiendeCliente(int idCliente){
+void atiendeCliente(int clientId){
 	
 	//Crear interfaz de servidor
-	matrix_imp imp = matrix_imp(idCliente);
+	std::cout << "En el hilo " << std::this_thread::get_id() << " entra dentro de atiende cliente" << std::endl;
+	matrix_imp matrix_imp = matrix_imp(clientId);
 	//Mientras no cerre conexion
 	do{
+		std::cout << "En el hilo " << std::this_thread::get_id() << " recibeOp()" << std::endl;
 		//Atiende operacion
-		imp.recibeOp();
+		matrix_imp.recibeOp();
 		
-	}while(!imp.connectionClosed());
+	}while(!matrix_imp.connectionClosed());
 	//Va a estar en el while hasta que se invoque al destructor
+	std::cout << "En el hilo " << std::this_thread::get_id() << " sale de atiendeCliente" << std::endl;
+	th->join();
 }
 
 
 int main(int argc, char** argv)
 {
 	//iniciar un servidor
+	std::cout<<"entra dentro del main del server"<<std::endl;
     auto serverSocket=initServer(60000);
+	std::cout<<"He iniciado al server"<<std::endl;
     while(1){
 		//esperar conexiones en puerto
          while(!checkClient()){
-             usleep(1000);
+             usleep(100);
         }
 		
 		//resolver identificador Cliente
        int clientId=getLastClientID();
 	   std::thread *th = new std::thread(atiendeCliente, clientId);
    }
-
     close(serverSocket);
     return 0;
 }

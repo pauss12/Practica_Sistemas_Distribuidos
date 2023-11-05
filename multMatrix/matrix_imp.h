@@ -14,7 +14,10 @@ class matrix_imp{
 
 	public:
 	
-		matrix_imp(int clientId) : clientId(clientId) {};
+		matrix_imp(int clientId) : clientId(clientId) {
+			
+			std::cout<<"soy el constructor"<<std::endl;
+		};
 
 		bool connectionClosed() {
 			return m == nullptr;
@@ -26,6 +29,7 @@ class matrix_imp{
 			std::vector<unsigned char> rpcOut;
 			
 			recvMSG(clientId, rpcIn);
+			std::cout<<"el imp ha recibido la operacion"<<std::endl;
 
 			operacionesEnum operacion = unpack<operacionesEnum>(rpcIn);
 
@@ -51,7 +55,7 @@ class matrix_imp{
 					}
 					
 				}break;
-			
+			/*
 				case opLeerMatriz:
 				{
 					if (m) {
@@ -114,7 +118,6 @@ class matrix_imp{
                     }
                 } break;
 
-
              case opCrearRandom:
             {
                 int rows = unpack<int>(rpcIn);
@@ -155,7 +158,7 @@ class matrix_imp{
                 pack(rpcOut, (unsigned char)MSG_NOK);
             }
             }break;
-
+*/
 				default:
 				{
 					std::cout << "Error: función no definida" << std::endl;
