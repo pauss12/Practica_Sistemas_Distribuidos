@@ -12,7 +12,7 @@ void freeMatrix(matrix_t* m){
 int main()
 {
     multMatrix_stub* mmatrix=new multMatrix_stub();
-/*
+
     matrix_t* m1= mmatrix->crearRandom(5,5);
     matrix_t* m2= mmatrix->crearIdentidad(5,5);
     matrix_t* mres=mmatrix->multiplicarMatrices(m1,m2);
@@ -26,6 +26,6 @@ int main()
     freeMatrix(mres);
     freeMatrix(m3);
     freeMatrix(mres2);
-*/
+
     delete mmatrix;
 }

@@ -46,7 +46,7 @@ class matrix_imp{
 						pack(rpcOut, (unsigned char)MSG_OK);
 						
 					} else {
-						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						std::cout << "La instancia de multMatrix no está creada" << "\n"<< std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
 					
@@ -55,18 +55,18 @@ class matrix_imp{
 				case opLeerMatriz:
 				{
 					if (m) {
-						const char* fileName =  Obtener el nombre del archivo de algún lugar ;
+						//const char* fileName =  Obtener el nombre del archivo de algún lugar ;
 						matrix_t* result = m->readMatrix(fileName);
 						if (result) {
 							// Realizar operaciones con la matriz leída
 							// Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
 							pack(rpcOut, (unsigned char)MSG_OK);
 						} else {
-							std::cout << "Error al leer la matriz desde el archivo" << std::endl;
+							std::cout << "Error al leer la matriz desde el archivo" << "\n"<< std::endl;
 							pack(rpcOut, (unsigned char)MSG_NOK);
 						}
 					} else {
-						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						std::cout << "La instancia de multMatrix no está creada" << "\n"<< std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
 					

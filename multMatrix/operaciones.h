@@ -59,6 +59,14 @@ inline void packMatrix(std::vector<unsigned char> &packet, T *data, int rows, in
 
 }
 
+//EMPAQUETAR UN ARRAY ------------------------------------------------------------------------------
+template<typename T>
+inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
+	
+	for(int i=0;i<dataSize;i++)
+		pack(packet, data[i]);
+}
+
 /*
 typedef struct __attribute__((packed))
 {
@@ -94,16 +102,6 @@ typedef struct __attribute__((packed))
 		}escribirMatriz;
 	};
 }operacion_t;
-
-
-
-//EMPAQUETAR UN ARRAY ------------------------------------------------------------------------------
-template<typename T>
-inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
-	
-	for(int i=0;i<dataSize;i++)
-		pack(packet, data[i]);
-}
 
 //EMPAQUETAR LA OPERACION QUE VA A REALIZAR ----------------------------------------------------------
 inline void empaquetaOperacion(std::vector<unsigned char> &packet,operacion_t  op)
