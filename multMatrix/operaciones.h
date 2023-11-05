@@ -42,6 +42,23 @@ inline T unpack(std::vector<unsigned char> &packet){
 	return data;
 }
 
+//EMPAQUETAR LA MATRIZ ----------------------------------------------------------------------------
+template<typename T>
+inline void packMatrix(std::vector<unsigned char> &packet, T *data, int rows, int cols) {
+
+	// Empaquetar el número de filas y columnas de la matriz.
+	pack(packet, rows);
+	pack(packet, cols);
+
+	// Empaquetar los datos de la matriz.
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			pack(packet, data[i * cols + j]);
+		}
+	}
+
+}
+
 /*
 typedef struct __attribute__((packed))
 {
@@ -86,23 +103,6 @@ inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
 	
 	for(int i=0;i<dataSize;i++)
 		pack(packet, data[i]);
-}
-
-//EMPAQUETAR LA MATRIZ ----------------------------------------------------------------------------
-template<typename T>
-inline void packMatrix(std::vector<unsigned char> &packet, T *data, int rows, int cols) {
-
-	// Empaquetar el número de filas y columnas de la matriz.
-	pack(packet, rows);
-	pack(packet, cols);
-
-	// Empaquetar los datos de la matriz.
-	for (int i = 0; i < rows; i++) {
-		for (int j = 0; j < cols; j++) {
-			pack(packet, data[i * cols + j]);
-		}
-	}
-
 }
 
 //EMPAQUETAR LA OPERACION QUE VA A REALIZAR ----------------------------------------------------------
