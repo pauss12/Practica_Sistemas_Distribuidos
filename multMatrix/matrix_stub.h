@@ -72,7 +72,7 @@ multMatrix_stub recvMatrixOp(int serverId, const std::string& rutaArchivo, opera
 	return matriz;
 }
 
-//MANDAR UNA CADENA ---------------------------------------------------------------------
+//MANDAR UNA CADENA DE CLIENTE A SERVER---------------------------------------------------------------------
 void sendStringOp(int serverId, std::string dato, personaOp op)
 {
 	std::vector<unsigned char> rpcOut;
@@ -91,6 +91,31 @@ void sendStringOp(int serverId, std::string dato, personaOp op)
 	if (rpcIn[0] != MSG_OK)
 		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";	
 }
+
+
+//RECIBIR UNA CADENA DE CLIENTE A SERVER---------------------------------------------------------------------
+void recvStringOp(int serverId, std::string &dato, personaOp op)
+{
+	std::vector<unsigned char> rpcOut;
+	std::vector<unsigned char> rpcIn;
+
+	pack(rpcOut, op);	
+	sendMSG(serverId, rpcOut);
+	
+	recvMSG(serverId, rpcIn);
+	unsigned char ok = unpack<unsigned char>(rpcIn);
+	if (ok != MSG_OK)
+	{
+		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
+	}else{
+		
+		//Desempaqueto el tamaño de la cadena
+		int tam = unpack<int>(rpcIn);
+		dato.resize(tam);				
+		unpackv(rpcIn, (char*)dato.data(), tam);
+	}
+}
+
 
 //CLASE MULTMATRIX DEL CLIENTE -----------------------------------------------------------------
 class multMatrix_stub
