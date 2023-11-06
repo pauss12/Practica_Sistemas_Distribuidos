@@ -33,28 +33,30 @@ inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
 		pack(packet, data[i]);
 }
 
-template<typename T>
-inline T unpack(std::vector<unsigned char> &packet){	
+template <typename T>
+inline T unpack(std::vector<unsigned char> &packet)
+{
 	T data;
-	int dataSize=sizeof(T);
-	int packetSize=packet.size();
-	T* ptr=(T*)packet.data();
-	data=ptr[0];
-	
-	for(int i=dataSize;i<packetSize;i++)
+	int dataSize = sizeof(T);
+	int packetSize = packet.size();
+	T *ptr = (T *)packet.data();
+	data = ptr[0];
+
+	for (int i = dataSize; i < packetSize; i++)
 	{
-		packet[i-dataSize]=packet[i];	
+		packet[i - dataSize] = packet[i];
 	}
-	
-	packet.resize(packetSize-dataSize);
+
+	packet.resize(packetSize - dataSize);
 	return data;
 }
 
-template<typename T>
-inline void unpackv(std::vector<unsigned char>&packet,T* data, int dataSize){
-	
-	for(int i=0;i<dataSize;i++)
-		data[i]=unpack<T>(packet);
+template <typename T>
+inline void unpackv(std::vector<unsigned char> &packet, T *data, int dataSize)
+{
+
+	for (int i = 0; i < dataSize; i++)
+		data[i] = unpack<T>(packet);
 }
 
 //EMPAQUETAR LA MATRIZ ----------------------------------------------------------------------------
@@ -106,49 +108,73 @@ inline void unpackMatrix(std::vector<unsigned char> &packet, T *data, int rows, 
 }
 
 //RECIBIR UNA CADENA ---------------------------------------------------------------------
-void recv_cadena(int id, std::string &dato, operacionesEnum op)
+void recv_cadena(int id, std::string &dato)
 {
-	std::vector<unsigned char> rpcOut;
+	
+	// Quiero que solamente me envie el tamaño de la cadena y su contenido
 	std::vector<unsigned char> rpcIn;
+	std::vector<unsigned char> rpcOut;
 
-	op = unpack<operacionesEnum>(rpcOut);
+	std::cout << "entra en el recibe cadena" << std::endl;
 
-	// Recibo el mensaje
 	recvMSG(id, rpcIn);
 
-	if (rpcIn[0] != MSG_OK)
-	{
-		std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-	}
-	else
-	{
+	std::cout << "Recibe el tamaño de la cadena y la cadena" << std::endl;
 
-		// Desempaqueto el tamaño de la cadena
-		int tam = unpack<int>(rpcIn);
-		dato = new char[tam];
-		unpackv(rpcIn, dato, tam);
-	}
+	// Recibir el tamaño de la cadena
+	int tam = unpack<int>(rpcIn);
 
-	// Envío OK (0: no okey, 1: Okey)
-	pack(rpcOut, (unsigned char)MSG_OK);
+	std::cout << "Recibe el tamaño de la cadena y la desempaqueta" << std::endl;
+
+	// Recibir la cadena
+	dato.resize(tam);
+
+	std::cout << "Redimensiona la cadena" << std::endl;
+
+	unpackv(rpcIn, (char *)dato.data(), tam);
+
+	std::cout << "Recibe la cadena y la desempaqueta" << std::endl;
+
+	// Enviar OK (0: no okey, 1: Okey)
+	pack(rpcOut, MSG_OK);
+
+	std::cout << "Empaqueta el OK" << std::endl;
+
 	sendMSG(id, rpcOut);
+
+	std::cout << "Envia el OK" << std::endl;
 }
 
 // ENVIAR UNA CADENA  ------------------------------------------------------------------
 void send_cadena(int id, const std::string &dato)
 {
+	//Quiero que me empaquete solamente el tamaño de la cadena y su contenido
 	std::vector<unsigned char> rpcOut;
 	std::vector<unsigned char> rpcIn;
-			
+
+	std::cout << "entra en el manda cadena" << std::endl;
+
+	// Empaquetar el tamaño de la cadena
 	int tam = dato.length() + 1;
 	pack(rpcOut, tam);
+
+	std::cout << "Empaqueta el tamaño de la cadena" << std::endl;
+
+	// Empaquetar la cadena
 	packv(rpcOut, dato.data(), tam);
-		
+
+	std::cout << "Empaqueta la cadena" << std::endl;
+
+	// Enviar el tamaño de la cadena y la cadena
 	sendMSG(id, rpcOut);
-			
-	//Recibir OK (0: no okey, 1: Okey)
+
+	std::cout << "Envia el tamaño de la cadena y la cadena" << std::endl;
+
+	// Recibir OK (0: no okey, 1: Okey)
 	recvMSG(id, rpcIn);
-	
+
+	std::cout << "Recibe el OK" << std::endl;
+
 	if (rpcIn[0] != MSG_OK)
-		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";	
+		std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 }

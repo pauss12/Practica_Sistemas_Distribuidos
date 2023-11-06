@@ -120,10 +120,39 @@ class matrix_imp{
 	
 				case opLeerMatriz:
 				{
+
+					// Creo la variable para tener la ruta del archivo (guardarlo en un char)
+					std::string dato;
+					std::cout << "entra en el case" << std::endl;
+
+					// Recibo la cadena con su tamaño y contenido
+					recv_cadena(clientId, dato);
+
+					std::cout << "mensaje recibido del cliente" << std::endl;
+
+					// Pasar la cadena a char
+					const char *fileName = dato.c_str();
+
+					// Llamar a la funcion para que lea la matriz en el server
+					matrix_t *mmatriz = matriz_server->readMatrix(fileName);
+
+					// Enviar la matriz
+					send_matriz_server(clientId, operacion, *mmatriz);
+
+					std::cout << "matriz enviada desde el server" << std::endl;
+
+					// Recibir el ok
+					recvMSG(clientId, rpcIn);
+
+					if (rpcIn[0] != MSG_OK)
+						std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+					/*
 					if (matriz_server)
 					{
 						//Creo la variable para tener la ruta del archivo (guardarlo en un char)
 						std::string dato;
+
+						std::cout << "entra en el case" << std::endl;
 
 						//Recibo la cadena con su tamaño y contenido
 						recv_cadena(clientId, dato);
@@ -153,6 +182,7 @@ class matrix_imp{
 						pack(rpcOut, (unsigned char)MSG_NOK);
 						
 					}
+					*/
 				}break;
 				/*
 				case opCrearRandom:
