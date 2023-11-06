@@ -105,103 +105,45 @@ inline void unpackMatrix(std::vector<unsigned char> &packet, T *data, int rows, 
 	}
 }
 
-/*
-typedef struct __attribute__((packed))
+//RECIBIR UNA CADENA ---------------------------------------------------------------------
+void recv_cadena(int id, char *dato, operacionesEnum op)
 {
-	operacionesEnum tipoOperacion; 
-	union{
-		
-		struct {
-			matrix_t matrizA;
-			matrix_t matrizB;		
-		}Multiplicar;
-		
-		struct {	
-			int filas;
-			int columnas;		
-		}crearIdentidad;
-		
-		struct {
-			int filas;
-			int columnas;
-			int rangoMax;
-			int rangoMin;
-		}crearRandom;
-		
-		struct {
-			char *rutaArchivo;
-			int tam;
-			matrix_t A;
-		}leerMatriz;
-		
-		struct {
-			char *rutaArchivo;
-			int tam;
-		}escribirMatriz;
-	};
-}operacion_t;
+	std::vector<unsigned char> rpcOut;
+	std::vector<unsigned char> rpcIn;
 
-//EMPAQUETAR LA OPERACION QUE VA A REALIZAR ----------------------------------------------------------
-inline void empaquetaOperacion(std::vector<unsigned char> &packet,operacion_t  op)
-{
-	unsigned char tipoOp=op.tipoOperacion;
-	pack(packet, tipoOp);
+	op = unpack<operacionesEnum>(rpcOut);	
 	
-	switch(op.tipoOperacion)
-	   {
-		case opMultiplicar:
-		{
-			packMatrix(op.tipoOperacion.matrizA);
-			packMatrix(op.tipoOperacion.matrizB);
-		}break;
-		 
-		case opCrearIdentidad:
-		{
-			pack(&packet, op.tipoOperacion.filas);
-			pack(&packet, op.tipoOperacion.columnas);
-		}break;
-		 
-		case opCrearRandom:
-		{
-			pack(&packet, op.tipoOperacion.filas);
-			pack(&packet, op.tipoOperacion.columnas);
-			pack(&packet, op.tipoOperacion.rangoMax);
-			pack(&packet, op.tipoOperacion.rangoMin);
-			
-		}break;
-		 
-		case opEscribirMatriz:
-		{
-			pack(packet, op.tipoOperacion.tam);
-			packv(packet, op.tipoOperacion.data(), tam);
-		}break;
-		 
-		case opLeerMatriz:
-		{
-			pack(packet, op.tipoOperacion.tam);
-			packv(packet, op.tipoOperacion.data(), tam);
-			
-			//¿Hay que empaquetar la matriz?
-		}break;
+	recvMSG(id, rpcIn);
+	
+	if (rpcIn[0] != MSG_OK)
+	{
+		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
+	}else{
 		
-		default:
-		{	
-			std::cout<<"Error: función no definida\n";
-		}		
-	};
+		//Desempaqueto el tamaño de la cadena
+		int tam = unpack<int>(rpcIn);
+		dato = new char[tam];
+		unpackv(rpcIn, dato, tam);
+	}
 }
-*/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+//ENVIAR UNA CADENA  ------------------------------------------------------------------
+void send_cadena(int id, std::string dato, operacionesEnum op)
+{
+	std::vector<unsigned char> rpcOut;
+	std::vector<unsigned char> rpcIn;
+			
+	pack(rpcOut, op);
+			
+	int tam = dato.length() + 1;
+	pack(rpcOut, tam);
+	packv(rpcOut, dato.data(), tam);
+		
+	sendMSG(id, rpcOut);
+			
+	//Recibir OK (0: no okey, 1: Okey)
+	recvMSG(id, rpcIn);
+	
+	if (rpcIn[0] != MSG_OK)
+		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";	
+}

@@ -6,51 +6,6 @@
 #include "operaciones.h"
 #include "multmatrix.h"
 
-//RECIBIR UNA CADENA DE CLIENTE A SERVER---------------------------------------------------------------------
-void recv_cadena_server(int clienteId, std::string dato, operacionesEnum op)
-{
-	std::vector<unsigned char> rpcOut;
-	std::vector<unsigned char> rpcIn;
-
-	pack(rpcOut, op);	
-	sendMSG(clienteId, rpcOut);
-	
-	recvMSG(clienteId, rpcIn);
-	
-	unsigned char ok = unpack<unsigned char>(rpcIn);
-	if (ok != MSG_OK)
-	{
-		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
-	}else{
-		
-		//Desempaqueto el tamaño de la cadena
-		int tam = unpack<int>(rpcIn);
-		dato.resize(tam);				
-		unpackv(rpcIn, (char*)dato.data(), tam);
-	}
-}
-
-//ENVIAR UNA CADENA DE SERVIDOR A CLIENTE ------------------------------------------------------------------
-void send_cadena_server(int clienteId, std::string dato, operacionesEnum op)
-{
-	std::vector<unsigned char> rpcOut;
-	std::vector<unsigned char> rpcIn;
-			
-	pack(rpcOut, op);
-			
-	int tam = dato.length() + 1;
-	pack(rpcOut, tam);
-	packv(rpcOut, dato.data(), tam);
-		
-	sendMSG(clienteId, rpcOut);
-			
-	//Recibir OK (0: no okey, 1: Okey)
-	recvMSG(clienteId, rpcIn);
-	
-	if (rpcIn[0] != MSG_OK)
-		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";	
-}
-
 //MANDAR UNA MATRIZ DESDE EL SERVER--------------------------------------------------------------------------------------
 void send_matriz_server(int clientId, operacionesEnum op, matrix_t matrix) {
     
@@ -120,7 +75,7 @@ class matrix_imp{
 
 	private: 
 		int clientId = -1;
-		multMatrix* matriz_server = nullptr;
+		multMatrix *matriz_server = nullptr;
 
 	public:
 	
@@ -166,23 +121,20 @@ class matrix_imp{
 				{
 					if (matriz_server)
 					{
-						//Creo la variable para tener la ruta del archivo
-						const char *fileName;
+						//Creo la variable para tener la ruta del archivo (guardarlo en un char)
+						char *fileName;
 						
 						//Recibo la cadena con su tamaño y contenido
-						recv_cadena_server(clientId, fileName, operacion);
-						
-						//PUEDE SER QUE EL NOMBRE DEL ARCHIVO CON SU RUTA NO SE ESTE LEYENDO BIEN?
+						recv_cadena(clientId, fileName, operacion);
 						
 						//Envio el ok
 						pack(rpcOut, (unsigned char)MSG_OK);
 						
 						//Llamar a la funcion para que lea la matriz en el server
-		----------------------		//ESTO ME DA ERRORES Y NS PORQ ------------------------------------
-						matriz_server = multMatrix::readMatrix(fileName);
+						matrix_t *mmatriz = matriz_server->readMatrix(fileName);
 						
 						//Enviar la matriz
-						send_matriz_server(clientId, operacion, matriz_server);
+						send_matriz_server(clientId, operacion, *mmatriz);
 						
 						//Recibir el ok
 						recvMSG(clientId, rpcIn);
@@ -289,6 +241,6 @@ class matrix_imp{
 				}break;
 			}
 
-				sendMSG(clientId, rpcOut);
+			sendMSG(clientId, rpcOut);
 		};
 };                          
