@@ -106,34 +106,39 @@ inline void unpackMatrix(std::vector<unsigned char> &packet, T *data, int rows, 
 }
 
 //RECIBIR UNA CADENA ---------------------------------------------------------------------
-void recv_cadena(int id, char *dato, operacionesEnum op)
+void recv_cadena(int id, std::string &dato, operacionesEnum op)
 {
 	std::vector<unsigned char> rpcOut;
 	std::vector<unsigned char> rpcIn;
 
-	op = unpack<operacionesEnum>(rpcOut);	
-	
+	op = unpack<operacionesEnum>(rpcOut);
+
+	// Recibo el mensaje
 	recvMSG(id, rpcIn);
-	
+
 	if (rpcIn[0] != MSG_OK)
 	{
-		std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
-	}else{
-		
-		//Desempaqueto el tamaño de la cadena
+		std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+	}
+	else
+	{
+
+		// Desempaqueto el tamaño de la cadena
 		int tam = unpack<int>(rpcIn);
 		dato = new char[tam];
 		unpackv(rpcIn, dato, tam);
 	}
+
+	// Envío OK (0: no okey, 1: Okey)
+	pack(rpcOut, (unsigned char)MSG_OK);
+	sendMSG(id, rpcOut);
 }
 
-//ENVIAR UNA CADENA  ------------------------------------------------------------------
-void send_cadena(int id, std::string dato, operacionesEnum op)
+// ENVIAR UNA CADENA  ------------------------------------------------------------------
+void send_cadena(int id, const std::string &dato)
 {
 	std::vector<unsigned char> rpcOut;
 	std::vector<unsigned char> rpcIn;
-			
-	pack(rpcOut, op);
 			
 	int tam = dato.length() + 1;
 	pack(rpcOut, tam);

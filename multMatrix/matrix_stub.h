@@ -9,7 +9,7 @@
 #include "operaciones.h"
 #include "multmatrix.h"
 
-// ENVIAR UNA MATRIZ ---------------------------------------------------------------------------------------------------------
+// ENVIAR UNA MATRIZ ---------------------------------------------------------------------------------------------------
 void sendMatrixOp(int id, operacionesEnum op, matrix_t &matrix)
 {
 
@@ -138,11 +138,17 @@ class multMatrix_stub
 			std::vector<unsigned char> rpcOut;
 			std::vector<unsigned char> rpcIn;
 
+			std::cout << "LEYENDO matriz" << std::endl;
+
 			// Enviar la rutaArchivo
-			send_cadena(serverConnection.serverId, rutaArchivo, opLeerMatriz);
+			send_cadena(serverConnection.serverId, rutaArchivo);
+
+			std::cout << "enviando" << std::endl;
 
 			// Comprobar que se ha mandado bien
 			recvMSG(serverConnection.serverId, rpcIn);
+
+			std::cout << "SE HA ENVIADO BIEN" << std::endl;
 
 			if (rpcIn[0] != MSG_OK)
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
@@ -154,27 +160,31 @@ class multMatrix_stub
 
 			return matriz;
 		};
+
+		
 };
 
 /*
-	multMatrix_stub multiplicarMatrices(const multMatrix_stub& matrizA, const multMatrix_stub& matrizB) {
-		// Empaquetar las matrices A y B
-		sendMatrixOp(matrizA, opMultiplicarMatrices);
-		sendMatrixOp(matrizB, opMultiplicarMatrices);
 
-		// Comprobar que se han enviado bien
-		recvMSG(serverConnection.serverId, rpcIn);
+//Multiplicar las matrices
+		matrix_t *multiplicarMatrices(const multMatrix_stub &matrizA, const multMatrix_stub &matrizB)
+		{
+			// Empaquetar las matrices A y B
+			sendMatrixOp(matrizA, opMultiplicarMatrices);
+			sendMatrixOp(matrizB, opMultiplicarMatrices);
 
-		if (rpcIn[0] != MSG_OK)
-			std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+			// Comprobar que se han enviado bien
+			recvMSG(serverConnection.serverId, rpcIn);
 
-		// Crear la matriz para recibir el resultado del servidor
-		multMatrix_stub resultado;
-		resultado = recvMatrixOp(serverConnection.serverId, "", opMultiplicarMatrices);
+			if (rpcIn[0] != MSG_OK)
+				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 
-		return resultado;
-	}
+			// Crear la matriz para recibir el resultado del servidor
+			matrix_t resultado;
+			resultado = recvMatrixOp(serverConnection.serverId, "", opMultiplicarMatrices);
 
+			return resultado;
+		};
 
 	void escribirMatriz(const multMatrix_stub& matriz, const std::string& rutaArchivo) {
 		// Empaquetar la matriz y la ruta del archivo

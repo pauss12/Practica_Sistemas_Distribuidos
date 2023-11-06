@@ -1,5 +1,4 @@
 #include "multmatrix.h"
-#include "multmatrix.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>

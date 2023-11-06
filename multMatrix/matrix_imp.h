@@ -90,6 +90,7 @@ class matrix_imp{
 			std::vector<unsigned char> rpcIn;
 			std::vector<unsigned char> rpcOut;
 			
+			//Recibe la operacion
 			recvMSG(clientId, rpcIn);
 
 			operacionesEnum operacion = unpack<operacionesEnum>(rpcIn);
@@ -122,20 +123,24 @@ class matrix_imp{
 					if (matriz_server)
 					{
 						//Creo la variable para tener la ruta del archivo (guardarlo en un char)
-						char *fileName;
-						
+						std::string dato;
+
 						//Recibo la cadena con su tamaño y contenido
-						recv_cadena(clientId, fileName, operacion);
-						
-						//Envio el ok
-						pack(rpcOut, (unsigned char)MSG_OK);
-						
+						recv_cadena(clientId, dato);
+
+						std::cout << "mensaje recibido del cliente" << std::endl;
+
+						//Pasar la cadena a char
+						const char* fileName = dato.c_str();
+
 						//Llamar a la funcion para que lea la matriz en el server
 						matrix_t *mmatriz = matriz_server->readMatrix(fileName);
 						
 						//Enviar la matriz
 						send_matriz_server(clientId, operacion, *mmatriz);
-						
+
+						std::cout << "matriz enviada desde el server" << std::endl;
+
 						//Recibir el ok
 						recvMSG(clientId, rpcIn);
 				
@@ -148,20 +153,48 @@ class matrix_imp{
 						pack(rpcOut, (unsigned char)MSG_NOK);
 						
 					}
-					
 				}break;
-				/*	
+				/*
+				case opCrearRandom:
+				{
+					int rows = unpack<int>(rpcIn);
+					int cols = unpack<int>(rpcIn);
+
+					if (rows > 0 && cols > 0)
+					{
+						matrix_t *randomMatrix = p->createRandMatrix(rows, cols);
+
+						if (randomMatrix)
+						{
+							packMatrix(rpcOut, randomMatrix);
+							pack(rpcOut, (unsigned char)MSG_OK);
+
+							// Libera la memoria de la matriz aleatoria
+							freeMatrix(randomMatrix);
+						}
+						else
+						{
+							pack(rpcOut, (unsigned char)MSG_NOK);
+						}
+					}
+					else
+					{
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+				}
+				break;
+
 				case opMultiplicarMatrices:
 				{
 					if (m) {
 						matrix_t* result = m->multMatrices(m1, m2);
-						
+
 						if (result) {
 							// Realizar operaciones con la matriz resultante
 							// Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
 							pack(rpcOut, (unsigned char)MSG_OK);
 						}else {
-							
+
 							std::cout << "Error al multiplicar las matrices" << std::endl;
 							pack(rpcOut, (unsigned char)MSG_NOK);
 						}
@@ -169,51 +202,31 @@ class matrix_imp{
 						std::cout << "La instancia de multMatrix no está creada" << std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
-				
+
 				}break;
 
 				case opCrearIdentidad:
-                {
-                    int rows = unpack<int>(rpcIn);
-                    int cols = unpack<int>(rpcIn);
-
-                    if (rows > 0 && cols > 0) {
-                        matrix_t* identityMatrix = p->createIdentity(rows, cols);
-
-                        if (identityMatrix) {
-                            packMatrix(rpcOut, identityMatrix);
-                            pack(rpcOut, (unsigned char)MSG_OK);
-
-                            freeMatrix(identityMatrix);
-                        } else {
-                            pack(rpcOut, (unsigned char)MSG_NOK);
-                        }
-                    } else {
-                        pack(rpcOut, (unsigned char)MSG_NOK);
-                    }
-                } break;
-
-				case opCrearRandom:
 				{
 					int rows = unpack<int>(rpcIn);
 					int cols = unpack<int>(rpcIn);
 
-					if (rows > 0 && cols > 0) {  
-						matrix_t* randomMatrix = p->createRandMatrix(rows, cols);
+					if (rows > 0 && cols > 0) {
+						matrix_t* identityMatrix = p->createIdentity(rows, cols);
 
-						if (randomMatrix) {
-							packMatrix(rpcOut, randomMatrix);
+						if (identityMatrix) {
+							packMatrix(rpcOut, identityMatrix);
 							pack(rpcOut, (unsigned char)MSG_OK);
 
-							// Libera la memoria de la matriz aleatoria
-							freeMatrix(randomMatrix);
+							freeMatrix(identityMatrix);
 						} else {
 							pack(rpcOut, (unsigned char)MSG_NOK);
 						}
 					} else {
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
-				}break;
+				} break;
+
+				
 
 				case opLeerMatriz:
 				{
@@ -221,7 +234,7 @@ class matrix_imp{
 					matrix_t* matrixToWrite = unpackMatrix(rpcIn);
 
 					 if (matrixToWrite) {
-					   
+
 						p->writeMatrix(matrixToWrite, fileName);
 						pack(rpcOut, (unsigned char)MSG_OK);
 
