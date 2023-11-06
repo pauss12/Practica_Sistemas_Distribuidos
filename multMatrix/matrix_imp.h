@@ -122,7 +122,7 @@ class matrix_imp{
 				{
 
 					// Creo la variable para tener la ruta del archivo (guardarlo en un char)
-					std::string dato;
+					const std::string &dato;
 					std::cout << "entra en el case" << std::endl;
 
 					// Recibo la cadena con su tamaño y contenido

@@ -108,7 +108,7 @@ inline void unpackMatrix(std::vector<unsigned char> &packet, T *data, int rows, 
 }
 
 //RECIBIR UNA CADENA ---------------------------------------------------------------------
-void recv_cadena(int id, std::string &dato)
+void recv_cadena(int id, const std::string dato)
 {
 	
 	// Quiero que solamente me envie el tamaño de la cadena y su contenido
