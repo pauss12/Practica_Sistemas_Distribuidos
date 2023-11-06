@@ -1,22 +1,87 @@
-#ifndef FILEMANAGER_IMP_H
-#define FILEMANAGER_IMP_H
-
+#pragma once
+#include <iostream>
+#include <vector>
+#include <string>
+#include "utils.h"
+#include "operacionesFiles.h"
 #include "filemanager.h"
 
+class FileManager_Imp {
+private:
+    int clientId;
+    FileManager* fileManager;
 
-#define OP_EXIT 0
-#define OP_READFILE 1
-#define OP_LISTFILES 2
-#define OP_WRITEFILE 3
+public:s
+    FileManager_Imp(int clientId) : clientId(clientId), fileManager(nullptr) {
+        // Constructor, inicializa lo que necesites.
+    }
 
-class FileManager_Imp
-{
-    FileManager* fm = nullptr;
-    
-public:
-    FileManager_Imp(string path);
-    ~FileManager_Imp();
-    void run();
+    bool connectionClosed() {
+        return fileManager == nullptr;
+    }
+
+    void recibeOp() {
+        std::vector<unsigned char> rpcIn;
+        std::vector<unsigned char> rpcOut;
+
+        // Recibe operación
+        recvMSG(clientId, rpcIn);
+
+        fileManagerOperacionesEnum operacion = unpack<fileManagerOperacionesEnum>(rpcIn);
+
+        // Ejecuta la operación correspondiente y genera una respuesta.
+        switch (operacion) {
+            case opConstructor:
+                if (fileManager == nullptr) {
+                    // Si el FileManager no está inicializado, crea una nueva instancia.
+                    fileManager = new FileManager();
+                    pack(rpcOut, (unsigned char)MSG_OK);
+                } else {
+                    // Ya existe una instancia, envía un error.
+                    pack(rpcOut, (unsigned char)MSG_NOK);
+                }
+                break;
+
+            case opDestructor:
+                if (fileManager != nullptr) {
+                    // Si el FileManager está inicializado, elimina la instancia.
+                    delete fileManager;
+                    fileManager = nullptr;
+                    pack(rpcOut, (unsigned char)MSG_OK);
+                } else {
+                    // No hay una instancia para destruir, envía un error.
+                    pack(rpcOut, (unsigned char)MSG_NOK);
+                }
+                break;
+
+            case opListFiles:
+                if (fileManager != nullptr) {
+                    // Si el FileManager está inicializado, realiza la operación "listFiles".
+                    std::vector<std::string*>* fileList = fileManager->listFiles();
+
+                    if (fileList != nullptr) {
+                        // Si la operación fue exitosa, empaqueta los resultados y envía un OK.
+                        pack(rpcOut, (unsigned char)MSG_OK);
+                        // Aquí debes implementar la lógica para empaquetar los nombres de archivos y sus tamaños en rpcOut.
+                    } else {
+                        // La operación "listFiles" falló, envía un error.
+                        pack(rpcOut, (unsigned char)MSG_NOK);
+                    }
+                } else {
+                    // No hay una instancia de FileManager para realizar la operación, envía un error.
+                    pack(rpcOut, (unsigned char)MSG_NOK);
+                }
+                break;
+
+            // Implementa el resto de operaciones (opReadFile, opWriteFile) de manera similar.
+
+            default:
+                // Operación no definida, envía un error.
+                pack(rpcOut, (unsigned char)MSG_NOK);
+                break;
+        }
+
+        // Envía la respuesta al cliente.
+        sendMSG(clientId, rpcOut);
+    }
 };
-
-#endif // FILEMANAGER_IMP_H

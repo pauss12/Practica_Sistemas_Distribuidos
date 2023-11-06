@@ -1,26 +1,32 @@
 #include <iostream>
-#include "filemanager.h"
+#include "filemanagerstub.h"  // Reemplaza con el nombre correcto del archivo de encabezado del stub
 
-int main(int argc,char** argv)
-{
-    FileManager *fm=new FileManager("./dirprueba/");
-    vector<string*>* vfiles=fm->listFiles();
-    cout<<"Lista de ficheros en el directorio de prueba:\n";
-    for(unsigned int i=0;i<vfiles->size();++i)
-    {
-        cout<<"Fichero: "<<vfiles->at(i)->c_str()<<endl;
+int main(int argc, char** argv) {
+    // Crea una instancia del stub del FileManager para interactuar con el servidor de archivos
+    FileManager_Stub filemanager(0);  // Reemplaza el 0 con el ID de cliente adecuado
+
+    // Ejemplo: Listar archivos en el servidor
+    std::vector<std::string> files;
+    FileManagerOp.listFiles(files);
+    std::cout << "Lista de ficheros en el servidor:\n";
+    for (const std::string& file : files) {
+        std::cout << "Fichero: " << file << std::endl;
     }
-    cout<<"Leyendo el primer fichero del directorio de prueba:\n";
 
-    char* data=nullptr;
-    unsigned long int fileLen=0;
-    fm->readFile(&(*(vfiles->at(0)))[0],data,fileLen);
-    cout<<"Escribiendo el primer fichero del directorio de prueba:\n";
-    fm->writeFile(&(*(vfiles->at(0)))[0],data,fileLen);
-    cout<<"Liberando lista de ficheros:\n";
-    fm->freeListedFiles(vfiles);
-    cout<<"Liberando datos de fichero leído:\n";
+    // Ejemplo: Leer un archivo del servidor
+    char* data;
+    unsigned long int dataLength;
+    FileManagerOp.readFile("archivo.txt", data, dataLength);
+    std::cout << "Contenido del archivo:\n";
+    std::cout.write(data, dataLength);
 
+    // Ejemplo: Escribir un archivo en el servidor
+    char fileData[] = "Contenido para escribir en el archivo.";
+    FileManagerOp.writeFile("nuevo_archivo.txt", fileData, sizeof(fileData));
+
+    // No es necesario liberar la lista de ficheros en este caso
+
+    // Liberando datos de fichero leído
     delete[] data;
     return 0;
 }
