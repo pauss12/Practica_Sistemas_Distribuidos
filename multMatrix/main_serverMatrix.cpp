@@ -19,7 +19,7 @@ void atiendeCliente(int clientId){
 		
 	}while(!imp.connectionClosed());
 	//Va a estar en el while hasta que se invoque al destructor
-};
+}
 
 
 int main(int argc, char** argv)
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
     while(1){
 		//esperar conexiones en puerto
          while(!checkClient()){
-             usleep(100);
+             usleep(1000);
         }
 		
 		//resolver identificador Cliente

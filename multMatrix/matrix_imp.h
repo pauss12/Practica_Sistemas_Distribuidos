@@ -16,6 +16,7 @@ class matrix_imp{
 	public:
 	
 		matrix_imp(int clientId) : clientId(clientId) {};
+		~matrix_imp() { delete matriz_server; };
 
 		bool connectionClosed() {
 			return matriz_server == nullptr;
@@ -45,11 +46,16 @@ class matrix_imp{
 					delete matriz_server;
 					matriz_server = nullptr;
 					pack(rpcOut, (unsigned char)MSG_OK);
-
 				}break;
 	
 				case opLeerMatriz:
 				{
+
+					if (!matriz_server) {
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+						break;
+					}
 
 					std::string dato;
 
@@ -100,8 +106,7 @@ class matrix_imp{
 					{
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
-				}
-				break;
+				}break;
 
 				case opMultiplicarMatrices:
 				{
@@ -145,7 +150,7 @@ class matrix_imp{
 					}
 				} break;
 
-				
+
 
 				case opLeerMatriz:
 				{

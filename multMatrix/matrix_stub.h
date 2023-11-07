@@ -9,20 +9,6 @@
 #include "operaciones.h"
 #include "multmatrix.h"
 
-// MANDAR UNA MATRIZ AL SERVIDOR--------------------------------------------------------------------------------------
-void send_matriz_to_server(int serverId, operacionesEnum op, matrix_t matrix)
-{
-	std::vector<unsigned char> rpcOut;
-
-	// Empaquetar la operación
-	pack(rpcOut, op);
-
-	// Empaquetar la matriz
-	packMatrix(rpcOut, matrix.data, matrix.rows, matrix.cols);
-
-	// Envía la operación y la matriz al servidor
-	sendMSG(serverId, rpcOut);
-}
 
 // CLASE MULTMATRIX DEL CLIENTE -----------------------------------------------------------------
 class multMatrix_stub
@@ -51,8 +37,6 @@ class multMatrix_stub
 			//Recibir OK (0: no okey, 1: Okey)
 			recvMSG(serverConnection.serverId, rpcIn);
 			
-			std::cout<<"EL CONSTRUCTOR DEL CLIENTE FUNCIONA"<<std::endl;
-			
 			if (rpcIn[0] != MSG_OK)
 				std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
 		};
@@ -71,8 +55,6 @@ class multMatrix_stub
 			
 			//Recibir OK (0: no okey, 1: Okey)
 			recvMSG(serverConnection.serverId, rpcIn);
-			
-			std::cout<<"EL DESTRUCTOR DEL CLIENTE FUNCIONA"<<std::endl;
 			
 			if (rpcIn[0] != MSG_OK)
 				std::cout<<"ERROR "<<__FILE__<<":"<<__LINE__<<"\n";
@@ -105,8 +87,22 @@ class multMatrix_stub
 
 			//Desempaquetar los datos de la matriz
 			unpackv(rpcIn, matriz->data, matriz->rows * matriz->cols);
+			
 			return matriz;
-		};	
+		};
+		/*
+		//Crear random
+		matrix_t *crearRandom(int filas, int columnas, int rangoMin, int rangoMax)
+		{
+
+			std::vector<unsigned char> rpcOut;
+			std::vector<unsigned char> rpcIn;
+
+
+
+			//return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
+		}
+		*/
 };
 
 /*
@@ -148,8 +144,6 @@ class multMatrix_stub
 		return sendMatrixOp(opCrearIdentidad, filas, columnas, 0, 0, "");
 }
 
-	matrix_t crearRandom(int filas, int columnas, int rangoMin, int rangoMax) {
-		return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
-	}
+	
 
 */
