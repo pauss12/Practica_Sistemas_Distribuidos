@@ -77,6 +77,7 @@ class multMatrix_stub
 
 			//Desempaquetar el ok
 			unsigned char ok = unpack<unsigned char>(rpcIn);
+
 			if (ok != MSG_OK)
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 
@@ -87,21 +88,31 @@ class multMatrix_stub
 
 			//Desempaquetar los datos de la matriz
 			unpackv(rpcIn, matriz->data, matriz->rows * matriz->cols);
-			
+
 			return matriz;
 		};
-		/*
-		//Crear random
-		matrix_t *crearRandom(int filas, int columnas, int rangoMin, int rangoMax)
-		{
 
+		/*
+		// Escribir la matriz
+		void escribirMatriz(const multMatrix_stub &matriz, const std::string &rutaArchivo)
+		{
 			std::vector<unsigned char> rpcOut;
 			std::vector<unsigned char> rpcIn;
 
+			// Empaquetar la matriz y la ruta del archivo
+			packMatrix(rpcOut, matriz.data, matriz.rows, matriz.cols);
 
+			
 
-			//return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
-		}
+			//sendStringOp(serverConnection.serverId, rutaArchivo, opEscribirMatriz);
+
+			// Comprobar que se han enviado bien
+			recvMSG(serverConnection.serverId, rpcIn);
+
+			if (rpcIn[0] != MSG_OK)
+				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+
+		};
 		*/
 };
 
@@ -127,23 +138,25 @@ class multMatrix_stub
 			return resultado;
 		};
 
-	void escribirMatriz(const multMatrix_stub& matriz, const std::string& rutaArchivo) {
-		// Empaquetar la matriz y la ruta del archivo
-		sendMatrixOp(matriz, opEscribirMatriz);
-		sendStringOp(serverConnection.serverId, rutaArchivo, opEscribirMatriz);
+		//Crear random
+		matrix_t *crearRandom(int filas, int columnas, int rangoMin, int rangoMax)
+		{
 
-		// Comprobar que se han enviado bien
-		recvMSG(serverConnection.serverId, rpcIn);
+			std::vector<unsigned char> rpcOut;
+			std::vector<unsigned char> rpcIn;
 
-		if (rpcIn[0] != MSG_OK)
-			std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-	}
+
+
+			//return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
+		}
+
+	
 
 
 	matrix_t crearIdentidad(int filas, int columnas) {
 		return sendMatrixOp(opCrearIdentidad, filas, columnas, 0, 0, "");
 }
 
-	
+
 
 */

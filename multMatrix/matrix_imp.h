@@ -79,6 +79,15 @@ class matrix_imp{
 					delete mmatriz;
 
 				}break;
+
+				case opEscribirMatriz:
+				{
+
+					
+
+				}break;
+
+				
 				/*
 				case opCrearRandom:
 				{
@@ -150,26 +159,6 @@ class matrix_imp{
 					}
 				} break;
 
-
-
-				case opLeerMatriz:
-				{
-				 if (m) {
-					matrix_t* matrixToWrite = unpackMatrix(rpcIn);
-
-					 if (matrixToWrite) {
-
-						p->writeMatrix(matrixToWrite, fileName);
-						pack(rpcOut, (unsigned char)MSG_OK);
-
-						freeMatrix(matrixToWrite);
-					} else {
-						pack(rpcOut, (unsigned char)MSG_NOK);
-					}
-				} else {
-					pack(rpcOut, (unsigned char)MSG_NOK);
-				}
-				}break;
 			*/
 				default:
 				{
