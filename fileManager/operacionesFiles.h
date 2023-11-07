@@ -5,11 +5,14 @@
 #define MSG_OK 1
 #define MSG_NOK 0
 
-typedef enum {
-    opListFiles = 8,
-    opReadFile = 9,
-    opWriteFile = 10
-} operacionesEnum;
+typedef enum operacionesEnum{
+    opConstructor =1,
+    opDestructor=2,
+    opListFiles = 3,
+    opReadFile = 4,
+    opWriteFile = 5
+}operacionesEnum;
+
 
 template<typename T>
 inline void pack(std::vector<unsigned char> &packet,T data){
