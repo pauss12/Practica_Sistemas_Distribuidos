@@ -92,28 +92,38 @@ class multMatrix_stub
 			return matriz;
 		};
 
-		/*
+		
 		// Escribir la matriz
-		void escribirMatriz(const multMatrix_stub &matriz, const std::string &rutaArchivo)
+		void escribirMatriz(matrix_t *matriz, const std::string &rutaArchivo)
 		{
 			std::vector<unsigned char> rpcOut;
 			std::vector<unsigned char> rpcIn;
-
-			// Empaquetar la matriz y la ruta del archivo
-			packMatrix(rpcOut, matriz.data, matriz.rows, matriz.cols);
-
 			
+			//Empaquetar la operacion
+			pack(rpcOut, opEscribirMatriz);
 
-			//sendStringOp(serverConnection.serverId, rutaArchivo, opEscribirMatriz);
+			//Empaquetar la matriz
+			packMatrix(rpcOut, matriz->data, matriz->rows, matriz->cols);
+
+			//Empaquetar la ruta del archivo
+			int tam = rutaArchivo.length() + 1;
+
+			pack(rpcOut, tam);
+			
+			packv(rpcOut, rutaArchivo.data(), tam);
+
+			sendMSG(serverConnection.serverId, rpcOut);		
 
 			// Comprobar que se han enviado bien
 			recvMSG(serverConnection.serverId, rpcIn);
 
-			if (rpcIn[0] != MSG_OK)
+			unsigned char ok = unpack<unsigned char>(rpcIn);
+
+			if (ok != MSG_OK)
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 
 		};
-		*/
+		
 };
 
 /*

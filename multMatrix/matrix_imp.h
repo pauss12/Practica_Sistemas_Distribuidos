@@ -82,12 +82,45 @@ class matrix_imp{
 
 				case opEscribirMatriz:
 				{
+					if (!matriz_server) {
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+						break;
+					}
 
+					std::string dato;
+
+					// Desempaquetar la matriz y la ruta del archivo
+					matrix_t *mmatriz = new matrix_t();
+					mmatriz->rows = unpack<int>(rpcIn);
+
+					mmatriz->cols = unpack<int>(rpcIn);
+
+					mmatriz->data = new int[mmatriz->rows * mmatriz->cols];
+
+					unpackv(rpcIn, mmatriz->data, mmatriz->rows * mmatriz->cols);
+
+					// Recibo la cadena con su tamaño y contenido; la operacion ya ha sido desempaquetada antes de entrar en el switch
+					//desempaquetar el tamaño de la cadena y su contenido
+					int tam = unpack<int>(rpcIn);
+
+					dato.resize(tam);
 					
+					unpackv(rpcIn, (char *)dato.data(), tam);
 
+					// Llamar a la funcion para que escriba la matriz en el server
+					matriz_server->writeMatrix(mmatriz, dato.c_str());
+
+					// Empaquetar el ok
+					pack(rpcOut, (unsigned char)MSG_OK);
+
+					//Eliminar la matriz y liberar la memoria
+					delete[] mmatriz->data;
+					delete mmatriz;
+					
 				}break;
 
-				
+
 				/*
 				case opCrearRandom:
 				{
