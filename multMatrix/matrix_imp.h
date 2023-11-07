@@ -42,22 +42,15 @@ class matrix_imp{
 					
 				case opDestructor:
 				{
-					if (matriz_server) {
-						
-						delete matriz_server;
-						pack(rpcOut, (unsigned char)MSG_OK);
-						
-					} else {
-						std::cout << "La instancia de multMatrix no está creada" << "\n"<< std::endl;
-						pack(rpcOut, (unsigned char)MSG_NOK);
-					}
-					
+					delete matriz_server;
+					matriz_server = nullptr;
+					pack(rpcOut, (unsigned char)MSG_OK);
+
 				}break;
 	
 				case opLeerMatriz:
 				{
 
-					// Creo la variable para tener la ruta del archivo (guardarlo en un char)
 					std::string dato;
 
 					// Recibo la cadena con su tamaño y contenido; la operacion ya ha sido desempaquetada antes de entrar en el switch
@@ -66,11 +59,11 @@ class matrix_imp{
 					dato.resize(tam);
 					unpackv(rpcIn, (char *)dato.data(), tam);
 
-					//Mandar el ok
-					pack(rpcOut, (unsigned char)MSG_OK);
-
 					// Llamar a la funcion para que lea la matriz en el server
 					matrix_t *mmatriz = matriz_server->readMatrix(dato.c_str());
+
+					// Empaquetar el ok
+					pack(rpcOut, (unsigned char)MSG_OK);
 
 					// empaquetar la matriz
 					packMatrix(rpcOut, mmatriz->data, mmatriz->rows, mmatriz->cols);
@@ -177,6 +170,7 @@ class matrix_imp{
 				{
 					std::cout << "Error: función no definida" << std::endl;
 					pack(rpcOut, (unsigned char)MSG_NOK);
+
 				}break;
 			}
 

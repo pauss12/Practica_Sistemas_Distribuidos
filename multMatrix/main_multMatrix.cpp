@@ -28,7 +28,7 @@ int main()
     freeMatrix(mres);
     */
     freeMatrix(m3);
-    //(mres2);
+    //freeMatrix(mres2);
 
     delete mmatrix;
 }
