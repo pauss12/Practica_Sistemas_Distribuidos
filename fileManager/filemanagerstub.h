@@ -1,25 +1,17 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdio.h>
+#include <stdlib.h>
 #include "utils.h"
 #include "operacionesFiles.h"
 
-enum FileManagerOp {
-    OpListFiles = 8,
-    OpReadFile = 9,
-    OpWriteFile = 10
-};
 
-class FileManager_Stub {
-private:
-    connection_t serverConnection;
-
-    void sendStringOp(int serverId, const std::string& dato) {
+  void sendStringOp(int serverId, const std::string& dato, operacionesEnum op) {
         std::vector<unsigned char> rpcOut;
         std::vector<unsigned char> rpcIn;
 
-        // En lugar de especificar la operación 'op', utilizamos la operación correspondiente de FileManager.
-        pack(rpcOut, OpWriteFile);
+        pack(rpcOut, op);
 
         int tam = dato.length() + 1;
         pack(rpcOut, tam);
@@ -33,12 +25,11 @@ private:
         }
     }
 
-    void recvStringOp(int serverId, std::string& dato) {
+    void recvStringOp(int serverId, std::string& dato, operacionesEnum op) {
         std::vector<unsigned char> rpcOut;
         std::vector<unsigned char> rpcIn;
 
-        // En lugar de especificar la operación 'op', utilizamos la operación correspondiente de FileManager.
-        pack(rpcOut, OpReadFile);
+        pack(rpcOut, op);
         sendMSG(serverId, rpcOut);
 
         recvMSG(serverId, rpcIn);
@@ -53,84 +44,85 @@ private:
         }
     }
 
-public:
-    FileManager_Stub(const std::string& serverIP, int serverPort) {
-        serverConnection = initClient(serverIP, serverPort);
-    }
 
-    ~FileManager_Stub() {
-        closeConnection(serverConnection.serverId);
-    }
+    class FileManager_Stub {
+    private:
+        std::string ip="172.31.63.167";
+		int port=60000;
+        connection_t serverConnection;
 
-    std::vector<std::string>* listFiles() {
-        std::vector<unsigned char> rpcOut;
-        std::vector<unsigned char> rpcIn;
-
-        pack(rpcOut, OpListFiles);
-
-        sendMSG(serverConnection.serverId, rpcOut);
-        recvMSG(serverConnection.serverId, rpcIn);
-
-        if (rpcIn[0] != MSG_OK) {
-            std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-            return nullptr;
-        } else {
-            int numFiles = unpack<int>(rpcIn);
-            std::vector<std::string>* fileList = new std::vector<std::string>();
-            for (int i = 0; i < numFiles; i++) {
-                std::string fileName;
-                recvStringOp(serverConnection.serverId, fileName);
-                fileList->push_back(fileName);
-            }
-            return fileList;
+        
+    public:
+        FileManager_Stub(const std::string& serverIP, int serverPort) {
+            serverConnection = initClient(serverIP, serverPort);
         }
-    }
 
-    void readFile(const std::string& fileName, char* &data, unsigned long int &dataLength) {
-        std::vector<unsigned char> rpcOut;
-        std::vector<unsigned char> rpcIn;
+        ~FileManager_Stub() {
+            closeConnection(serverConnection.serverId);
+        }
 
-        pack(rpcOut, OpReadFile);
-        sendStringOp(serverConnection.serverId, fileName);
+        std::vector<std::string>* listFiles() {
+            std::vector<unsigned char> rpcOut;
+            std::vector<unsigned char> rpcIn;
 
-        // Receive data
-        recvMSG(serverConnection.serverId, rpcIn);
+            pack(rpcOut, OpListFiles);
 
-        if (rpcIn[0] != MSG_OK) {
-            std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-        } else {
-            dataLength = unpack<unsigned long int>(rpcIn);
-            data = new char[dataLength];
-            // Receive file content
+            sendMSG(serverConnection.serverId, rpcOut);
             recvMSG(serverConnection.serverId, rpcIn);
-            for (unsigned long int i = 0; i < dataLength; i++) {
-                data[i] = rpcIn[i];
+
+            if (rpcIn[0] != MSG_OK) {
+                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+                return nullptr;
+            } else {
+                int numFiles = unpack<int>(rpcIn);
+                std::vector<std::string>* fileList = new std::vector<std::string>();
+                for (int i = 0; i < numFiles; i++) {
+                    std::string fileName;
+                    recvStringOp(serverConnection.serverId, fileName, OpListFiles);
+                    fileList->push_back(fileName);
+                }
+                return fileList;
             }
         }
-    }
 
-    void writeFile(const std::string& fileName, const char* data, unsigned long int dataLength) {
-        std::vector<unsigned char> rpcOut;
+        void readFile(const std::string& fileName, char* &data, unsigned long int &dataLength) {
+            std::vector<unsigned char> rpcOut;
+            std::vector<unsigned char> rpcIn;
 
-        pack(rpcOut, OpWriteFile);
-        sendStringOp(serverConnection.serverId, fileName);
+            pack(rpcOut, OpReadFile);
+            sendStringOp(serverConnection.serverId, fileName, OpReadFile);
 
-        pack(rpcOut, dataLength);
-        for (unsigned long int i = 0; i < dataLength; i++) {
-            rpcOut.push_back(data[i]);
+            // Receive data
+            recvMSG(serverConnection.serverId, rpcIn);
+
+            if (rpcIn[0] != MSG_OK) {
+                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+            } else {
+                dataLength = unpack<unsigned long int>(rpcIn);
+                data = new char[dataLength];
+                // Receive file content
+                recvMSG(serverConnection.serverId, rpcIn);
+                for (unsigned long int i = 0; i < dataLength; i++) {
+                    data[i] = rpcIn[i];
+                }
+            }
         }
 
-        sendMSG(serverConnection.serverId, rpcOut);
-    }
+        void writeFile(const std::string& fileName, const char* data, unsigned long int dataLength) {
+            std::vector<unsigned char> rpcOut;
 
-    void freeListedFiles(std::vector<std::string>* fileList) {
-    // Liberar la memoria de cada cadena individual en la lista.
-    for (auto fileName : *fileList) {
-        // No necesitas usar delete para las cadenas, ya que son objetos de la STL y se administran automáticamente.
-    }
+            pack(rpcOut, OpWriteFile);
+            sendStringOp(serverConnection.serverId, fileName, OpWriteFile);
 
-    // Luego, elimina la lista en sí.
-    delete fileList;
-}
+            pack(rpcOut, dataLength);
+            for (unsigned long int i = 0; i < dataLength; i++) {
+                rpcOut.push_back(data[i]);
+            }
 
-};
+            sendMSG(serverConnection.serverId, rpcOut);
+        }
+
+        void freeListedFiles(std::vector<std::string>* fileList) {
+            delete fileList;
+        }
+    };

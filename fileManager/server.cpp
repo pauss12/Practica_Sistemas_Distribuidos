@@ -9,7 +9,7 @@
 void atiendeCliente(int clientId){
 	
 	//Crear interfaz de servidor
-	filemanager_imp = filemanager_imp(clientId);
+	FileManager_Imp = FileManager_Imp(clientId);
 	//Mientras no cerre conexion
 	do{
 		//Atiende operacion

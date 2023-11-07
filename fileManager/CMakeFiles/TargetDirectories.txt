@@ -1,0 +1,3 @@
+/home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/CMakeFiles/rebuild_cache.dir
+/home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/CMakeFiles/fileManager.dir
+/home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/CMakeFiles/edit_cache.dir
