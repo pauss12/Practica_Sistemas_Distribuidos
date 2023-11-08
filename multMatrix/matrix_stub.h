@@ -159,6 +159,42 @@ class multMatrix_stub
 
 			return matrizPrueba;
 		};
+
+		// Crear random
+		matrix_t *crearRandom(int filas, int columnas)
+		{
+
+			std::vector<unsigned char> rpcOut;
+			std::vector<unsigned char> rpcIn;
+
+			matrix_t *matrizRandom = new matrix_t();
+
+			//Empaquetar la operacion
+			pack(rpcOut, opCrearRandom);
+
+			//Empaquetar las filas y columnas
+			pack(rpcOut, filas);
+			pack(rpcOut, columnas);
+
+			sendMSG(serverConnection.serverId, rpcOut);
+
+			recvMSG(serverConnection.serverId, rpcIn);
+
+			unsigned char ok = unpack<unsigned char>(rpcIn);
+
+			if (ok != MSG_OK)
+				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+
+			//Desempaquetar las filas y columnas de la matriz
+			matrizRandom->rows = unpack<int>(rpcIn);
+			matrizRandom->cols = unpack<int>(rpcIn);
+
+			//Desempaquetar los datos de la matriz
+			matrizRandom->data = new int[matrizRandom->rows * matrizRandom->cols];
+			unpackv(rpcIn, matrizRandom->data, matrizRandom->rows * matrizRandom->cols);
+
+			return matrizRandom;
+		}
 };
 
 /*
@@ -184,23 +220,5 @@ class multMatrix_stub
 
 			return resultado;
 		};
-
-		//Crear random
-		matrix_t *crearRandom(int filas, int columnas, int rangoMin, int rangoMax)
-		{
-
-			std::vector<unsigned char> rpcOut;
-			std::vector<unsigned char> rpcIn;
-
-
-
-			//return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
-		}
-
-
-
-
-
-
 
 */

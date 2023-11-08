@@ -131,9 +131,9 @@ class matrix_imp{
 
 						if (identityMatrix)
 						{
-							packMatrix(rpcOut, identityMatrix->data, identityMatrix->rows, identityMatrix->cols);
 							pack(rpcOut, (unsigned char)MSG_OK);
-
+							packMatrix(rpcOut, identityMatrix->data, identityMatrix->rows, identityMatrix->cols);
+							
 							// Libera la memoria de la matriz identidad
 							delete[] identityMatrix->data;
 							delete identityMatrix;
@@ -148,35 +148,37 @@ class matrix_imp{
 
 				}break;
 
-				/*
+				
 				case opCrearRandom:
 				{
+					
 					int rows = unpack<int>(rpcIn);
 					int cols = unpack<int>(rpcIn);
 
 					if (rows > 0 && cols > 0)
 					{
-						matrix_t *randomMatrix = p->createRandMatrix(rows, cols);
+						matrix_t *randomMatrix = matriz_server->createRandMatrix(rows, cols);
 
 						if (randomMatrix)
 						{
-							packMatrix(rpcOut, randomMatrix);
 							pack(rpcOut, (unsigned char)MSG_OK);
+							packMatrix(rpcOut, randomMatrix->data, randomMatrix->rows, randomMatrix->cols);
 
-							// Libera la memoria de la matriz aleatoria
-							freeMatrix(randomMatrix);
-						}
-						else
-						{
+							// Libera la memoria de la matriz identidad
+							delete[] randomMatrix->data;
+							delete randomMatrix;
+
+						}else{
 							pack(rpcOut, (unsigned char)MSG_NOK);
 						}
-					}
-					else
-					{
+
+					}else{
 						pack(rpcOut, (unsigned char)MSG_NOK);
 					}
+
 				}break;
 
+				/*
 				case opMultiplicarMatrices:
 				{
 					if (m) {

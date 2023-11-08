@@ -13,7 +13,10 @@ int main()
 {
     multMatrix_stub *mmatrix=new multMatrix_stub();
     
-    //matrix_t* m1= mmatrix->crearRandom(5,5);
+    matrix_t* m1= mmatrix->crearRandom(5,5);
+
+    //lo de debajo lo he añadido yo para probar
+    mmatrix->escribirMatriz(m1, "pruebaCrearRandom.txt");
     /*
     matrix_t* m2= mmatrix->crearIdentidad(5,5);
     matrix_t* mres=mmatrix->multiplicarMatrices(m1,m2);
@@ -28,7 +31,7 @@ int main()
     {
         mres->data[i] = i;
     }
-    
+
     mmatrix->escribirMatriz(mres,"HOLA.txt");
     matrix_t* m3=mmatrix->leerMatriz("resultado.txt");
     /*
