@@ -120,6 +120,33 @@ class matrix_imp{
 					
 				}break;
 
+				case opCrearIdentidad:
+				{
+					int rows = unpack<int>(rpcIn);
+					int cols = unpack<int>(rpcIn);
+
+					if (rows > 0 && cols > 0)
+					{
+						matrix_t *identityMatrix = matriz_server->createIdentity(rows, cols);
+
+						if (identityMatrix)
+						{
+							packMatrix(rpcOut, identityMatrix->data, identityMatrix->rows, identityMatrix->cols);
+							pack(rpcOut, (unsigned char)MSG_OK);
+
+							// Libera la memoria de la matriz identidad
+							delete[] identityMatrix->data;
+							delete identityMatrix;
+
+						}else{
+							pack(rpcOut, (unsigned char)MSG_NOK);
+						}
+
+					}else{
+						pack(rpcOut, (unsigned char)MSG_NOK);
+					}
+
+				}break;
 
 				/*
 				case opCrearRandom:
@@ -170,27 +197,6 @@ class matrix_imp{
 					}
 
 				}break;
-
-				case opCrearIdentidad:
-				{
-					int rows = unpack<int>(rpcIn);
-					int cols = unpack<int>(rpcIn);
-
-					if (rows > 0 && cols > 0) {
-						matrix_t* identityMatrix = p->createIdentity(rows, cols);
-
-						if (identityMatrix) {
-							packMatrix(rpcOut, identityMatrix);
-							pack(rpcOut, (unsigned char)MSG_OK);
-
-							freeMatrix(identityMatrix);
-						} else {
-							pack(rpcOut, (unsigned char)MSG_NOK);
-						}
-					} else {
-						pack(rpcOut, (unsigned char)MSG_NOK);
-					}
-				} break;
 
 			*/
 				default:

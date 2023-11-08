@@ -123,10 +123,47 @@ class multMatrix_stub
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 
 		};
-		
+
+		//Crear la matriz identidad
+		matrix_t *crearIdentidad(int filas, int columnas)
+		{
+			std::vector<unsigned char> rpcOut;
+			std::vector<unsigned char> rpcIn;
+
+			matrix_t *matrizPrueba = new matrix_t();
+
+			//Empaquetar la operacion
+			pack(rpcOut, opCrearIdentidad);
+
+			//Empaquetar las filas y columnas
+			pack(rpcOut, filas);
+			pack(rpcOut, columnas);
+
+			sendMSG(serverConnection.serverId, rpcOut);
+
+			// Comprobar que se han enviado bien
+			recvMSG(serverConnection.serverId, rpcIn);
+
+			unsigned char ok = unpack<unsigned char>(rpcIn);
+
+			if (ok != MSG_OK)
+				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+
+			//Desempaquetar las filas y columnas de la matriz
+			matrizPrueba->rows = unpack<int>(rpcIn);
+			matrizPrueba->cols = unpack<int>(rpcIn);
+
+			//Desempaquetar los datos de la matriz
+			matrizPrueba->data = new int[matrizPrueba->rows * matrizPrueba->cols];
+			unpackv(rpcIn, matrizPrueba->data, matrizPrueba->rows * matrizPrueba->cols);
+
+			return matrizPrueba;
+		};
 };
 
 /*
+
+
 
 //Multiplicar las matrices
 		matrix_t *multiplicarMatrices(const multMatrix_stub &matrizA, const multMatrix_stub &matrizB)
@@ -160,12 +197,9 @@ class multMatrix_stub
 			//return sendMatrixOp(opCrearRandom, filas, columnas, rangoMin, rangoMax, "");
 		}
 
-	
 
 
-	matrix_t crearIdentidad(int filas, int columnas) {
-		return sendMatrixOp(opCrearIdentidad, filas, columnas, 0, 0, "");
-}
+
 
 
 
