@@ -8,11 +8,11 @@ void freeMatrix(matrix_t* m){
     delete[] m;
 
 }
-
+/*
 int main()
 {
     multMatrix_stub *mmatrix=new multMatrix_stub();
-    
+
     matrix_t* m1= mmatrix->crearRandom(5,5);
 
     //lo de debajo lo he añadido yo para probar
@@ -29,18 +29,18 @@ int main()
 
     freeMatrix(m2);
     freeMatrix(mres);
-    
+
     freeMatrix(m3);
     freeMatrix(mres2);
 
     delete mmatrix;
 }
+*/
+// MAIN QUE NOS DAN AL PRINCIPIO, EL QUE DESCOMENTARE DESPUES DE LAS PRUEBAS
 
-//MAIN QUE NOS DAN AL PRINCIPIO, EL QUE DESCOMENTARE DESPUES DE LAS PRUEBAS
-/*
 int main()
 {
-    multMatrix *mmatrix = new multMatrix();
+    multMatrix_stub *mmatrix = new multMatrix_stub();
 
     matrix_t *m1 = mmatrix->crearRandom(5, 5);
     matrix_t *m2 = mmatrix->crearIdentidad(5, 5);
@@ -57,4 +57,3 @@ int main()
     freeMatrix(mres2);
     delete mmatrix;
 }
-*/

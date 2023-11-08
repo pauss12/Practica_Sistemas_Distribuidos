@@ -209,8 +209,8 @@ class multMatrix_stub
 			pack(rpcOut, opMultiplicarMatrices);
 
 			// Empaquetar las matrices A y B
-			packMatrix(rpcOut, matrizA.data, matrizA.rows, matrizA.cols);
-			packMatrix(rpcOut, matrizB.data, matrizB.rows, matrizB.cols);
+			packMatrix(rpcOut, matrizA->data, matrizA->rows, matrizA->cols);
+			packMatrix(rpcOut, matrizB->data, matrizB->rows, matrizB->cols);
 
 			//Enviar el mensaje
 			sendMSG(serverConnection.serverId, rpcOut);

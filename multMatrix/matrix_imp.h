@@ -50,7 +50,7 @@ class matrix_imp{
 	
 				case opLeerMatriz:
 				{
-
+					// Comprobar que existe una instancia de la matriz del server para poder acceder a las funciones
 					if (!matriz_server) {
 						std::cout << "La instancia de multMatrix no está creada" << std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
@@ -82,6 +82,7 @@ class matrix_imp{
 
 				case opEscribirMatriz:
 				{
+					// Comprobar que existe una instancia de la matriz del server para poder acceder a las funciones
 					if (!matriz_server) {
 						std::cout << "La instancia de multMatrix no está creada" << std::endl;
 						pack(rpcOut, (unsigned char)MSG_NOK);
@@ -122,7 +123,7 @@ class matrix_imp{
 
 				case opCrearIdentidad:
 				{
-
+					// Comprobar que existe una instancia de la matriz del server para poder acceder a las funciones
 					if (!matriz_server)
 					{
 						std::cout << "La instancia de multMatrix no está creada" << std::endl;
@@ -159,7 +160,7 @@ class matrix_imp{
 				
 				case opCrearRandom:
 				{
-
+					// Comprobar que existe una instancia de la matriz del server para poder acceder a las funciones
 					if (!matriz_server)
 					{
 						std::cout << "La instancia de multMatrix no está creada" << std::endl;
@@ -195,11 +196,48 @@ class matrix_imp{
 
 				case opMultiplicarMatrices:
 				{
-					int rows = unpack<int>(rpcIn);
-					int cols = unpack<int>(rpcIn);
+					//Comprobar que existe una instancia de la matriz del server para poder acceder a las funciones 
+					if (!matriz_server){
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+						break;
+					}
 
+					// Crear las dos matrices en las que se va a guardar las dos matrices
+					matrix_t *matriz_1 = new matrix_t();
+					matrix_t *matriz_2 = new matrix_t();
+
+					//Desempaquetar la primera matriz que me mandan desde el cliente
+					matriz_1->rows = unpack<int>(rpcIn);
+					matriz_1->cols = unpack<int>(rpcIn);
+					matriz_1->data = new int[matriz_1->rows * matriz_1->cols];
+
+					unpackv(rpcIn, matriz_1->data, matriz_1->rows * matriz_1->cols);
+
+					// Desempaquetar la segunda matriz que me mandan desde el cliente
+					matriz_2->rows = unpack<int>(rpcIn);
+					matriz_2->cols = unpack<int>(rpcIn);
+					matriz_2->data = new int[matriz_2->rows * matriz_2->cols];
+
+					unpackv(rpcIn, matriz_2->data, matriz_2->rows * matriz_2->cols);
+
+					// Multiplicar las dos matrices
+					matrix_t *matriz_resultado = matriz_server->multMatrices(matriz_1, matriz_2);
+
+					// Empaquetar el ok
+					pack(rpcOut, (unsigned char)MSG_OK);
+
+					//Empaquetar la matriz resultado
+					packMatrix(rpcOut, matriz_resultado->data, matriz_resultado->rows, matriz_resultado->cols);
+
+					//Eliminar la matriz y liberar la memoria
+					delete[] matriz_1->data;
+					delete[] matriz_2->data;
+					delete matriz_1;
+					delete matriz_2;
 					
-
+					delete[] matriz_resultado->data;
+					delete matriz_resultado;
 
 				}break;
 
