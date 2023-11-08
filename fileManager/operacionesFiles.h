@@ -5,13 +5,13 @@
 #define MSG_OK 1
 #define MSG_NOK 0
 
-typedef enum operacionesEnum{
+typedef enum FileManagerOp{
     opConstructor =1,
     opDestructor=2,
     opListFiles = 3,
     opReadFile = 4,
     opWriteFile = 5
-}operacionesEnum;
+}FileManagerOp;
 
 
 template<typename T>
@@ -31,7 +31,6 @@ inline void packv(std::vector<unsigned char> &packet,T* data,int dataSize)
 	for(int i=0;i<dataSize;i++)
 			 	pack(packet,data[i]);
 }
-
 
 
 template<typename T>
@@ -62,14 +61,14 @@ inline void unpackv(std::vector<unsigned char> &packet,T* data,int dataSize)
 
 
 // Enviar una solicitud para listar archivos al servidor del "FileManager."
-void sendListFiles(int id, operacionesEnum op) {
+void sendListFiles(int id, FileManagerOp op) {
     std::vector<unsigned char> rpcOut;
     pack(rpcOut, opListFiles);
     sendMSG(id, rpcOut);
 }
 
 // Recibir la respuesta del servidor del "FileManager" con una lista de archivos.
-void receiveListFiles(int id, std::vector<std::string> &fileList, operacionesEnum op) {
+void receiveListFiles(int id, std::vector<std::string> &fileList, FileManagerOp op) {
     std::vector<unsigned char> rpcIn;
     recvMSG(id, rpcIn);
 
@@ -89,7 +88,7 @@ void receiveListFiles(int id, std::vector<std::string> &fileList, operacionesEnu
 }
 
 // Enviar una solicitud para leer un archivo al servidor del "FileManager."
-void sendReadFile(int id, const std::string &fileName, operacionesEnum op) {
+void sendReadFile(int id, const std::string &fileName, FileManagerOp op) {
     std::vector<unsigned char> rpcOut;
     pack(rpcOut, opReadFile);
     int fileNameLen = fileName.length() + 1;
@@ -99,7 +98,7 @@ void sendReadFile(int id, const std::string &fileName, operacionesEnum op) {
 }
 
 // Recibir el contenido de un archivo desde el servidor del "FileManager."
-void receiveReadFile(int id, char *data, unsigned long int &dataLength, operacionesEnum op) {
+void receiveReadFile(int id, char *data, unsigned long int &dataLength, FileManagerOp op) {
     std::vector<unsigned char> rpcIn;
     recvMSG(id, rpcIn);
 
@@ -114,7 +113,7 @@ void receiveReadFile(int id, char *data, unsigned long int &dataLength, operacio
 }
 
 // Enviar una solicitud para escribir un archivo al servidor del "FileManager."
-void sendWriteFile(int id, const std::string &fileName, const char *data, unsigned long int dataLength, operacionesEnum op) {
+void sendWriteFile(int id, const std::string &fileName, const char *data, unsigned long int dataLength, FileManagerOp op) {
     std::vector<unsigned char> rpcOut;
     pack(rpcOut, opWriteFile);
     int fileNameLen = fileName.length() + 1;
@@ -126,7 +125,7 @@ void sendWriteFile(int id, const std::string &fileName, const char *data, unsign
 }
 
 // Recibir la confirmación del servidor del "FileManager" después de escribir un archivo.
-void receiveWriteFileConfirmation(int id, operacionesEnum op) {
+void receiveWriteFileConfirmation(int id, FileManagerOp op) {
     std::vector<unsigned char> rpcIn;
     recvMSG(id, rpcIn);
 

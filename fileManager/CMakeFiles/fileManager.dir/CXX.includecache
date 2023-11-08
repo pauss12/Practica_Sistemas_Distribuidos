@@ -33,16 +33,30 @@ vector
 -
 string
 -
+stdio.h
+-
+stdlib.h
+-
 utils.h
 /home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/utils.h
 operacionesFiles.h
 /home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/operacionesFiles.h
 
 /home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/main_fm.cpp
+stdio.h
+-
+stdlib.h
+-
 iostream
+-
+utils.h
+/home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/utils.h
+string
 -
 filemanagerstub.h
 /home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/filemanagerstub.h
+operacionesFiles.h
+/home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/operacionesFiles.h
 
 /home/ubuntu/Practica_Sistemas_Distribuidos/fileManager/operacionesFiles.h
 vector
