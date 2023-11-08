@@ -194,31 +194,42 @@ class multMatrix_stub
 			unpackv(rpcIn, matrizRandom->data, matrizRandom->rows * matrizRandom->cols);
 
 			return matrizRandom;
-		}
-};
+		};
 
-/*
-
-
-
-//Multiplicar las matrices
-		matrix_t *multiplicarMatrices(const multMatrix_stub &matrizA, const multMatrix_stub &matrizB)
+		// Multiplicar las matrices
+		matrix_t *multiplicarMatrices(matrix_t *matrizA, matrix_t *matrizB)
 		{
-			// Empaquetar las matrices A y B
-			sendMatrixOp(matrizA, opMultiplicarMatrices);
-			sendMatrixOp(matrizB, opMultiplicarMatrices);
 
-			// Comprobar que se han enviado bien
+			std::vector<unsigned char> rpcOut;
+			std::vector<unsigned char> rpcIn;
+
+			matrix_t *resultado = new matrix_t();
+
+			//Empaquetar la operacion
+			pack(rpcOut, opMultiplicarMatrices);
+
+			// Empaquetar las matrices A y B
+			packMatrix(rpcOut, matrizA.data, matrizA.rows, matrizA.cols);
+			packMatrix(rpcOut, matrizB.data, matrizB.rows, matrizB.cols);
+
+			//Enviar el mensaje
+			sendMSG(serverConnection.serverId, rpcOut);
+
+			//Recibir lo que el cliente envia, es decir si ha llegado bien y las matrices
 			recvMSG(serverConnection.serverId, rpcIn);
 
-			if (rpcIn[0] != MSG_OK)
-				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+			unsigned char ok = unpack<unsigned char>(rpcIn);
 
-			// Crear la matriz para recibir el resultado del servidor
-			matrix_t resultado;
-			resultado = recvMatrixOp(serverConnection.serverId, "", opMultiplicarMatrices);
+			if (ok != MSG_OK)
+				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+			
+			// Desempaquetar la matriz resultado
+			resultado->rows = unpack<int>(rpcIn);
+			resultado->cols = unpack<int>(rpcIn);
+			
+			resultado->data = new int[resultado->rows * resultado->cols];
+			unpackv(rpcIn, resultado->data, resultado->rows * resultado->cols);
 
 			return resultado;
 		};
-
-*/
+};

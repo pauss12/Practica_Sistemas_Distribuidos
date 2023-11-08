@@ -122,6 +122,14 @@ class matrix_imp{
 
 				case opCrearIdentidad:
 				{
+
+					if (!matriz_server)
+					{
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+						break;
+					}
+
 					int rows = unpack<int>(rpcIn);
 					int cols = unpack<int>(rpcIn);
 
@@ -151,7 +159,14 @@ class matrix_imp{
 				
 				case opCrearRandom:
 				{
-					
+
+					if (!matriz_server)
+					{
+						std::cout << "La instancia de multMatrix no está creada" << std::endl;
+						pack(rpcOut, (unsigned char)MSG_NOK);
+						break;
+					}
+
 					int rows = unpack<int>(rpcIn);
 					int cols = unpack<int>(rpcIn);
 
@@ -178,29 +193,16 @@ class matrix_imp{
 
 				}break;
 
-				/*
 				case opMultiplicarMatrices:
 				{
-					if (m) {
-						matrix_t* result = m->multMatrices(m1, m2);
+					int rows = unpack<int>(rpcIn);
+					int cols = unpack<int>(rpcIn);
 
-						if (result) {
-							// Realizar operaciones con la matriz resultante
-							// Por ejemplo, puedes almacenar 'result' en una variable miembro de la clase
-							pack(rpcOut, (unsigned char)MSG_OK);
-						}else {
+					
 
-							std::cout << "Error al multiplicar las matrices" << std::endl;
-							pack(rpcOut, (unsigned char)MSG_NOK);
-						}
-					} else {
-						std::cout << "La instancia de multMatrix no está creada" << std::endl;
-						pack(rpcOut, (unsigned char)MSG_NOK);
-					}
 
 				}break;
 
-			*/
 				default:
 				{
 					std::cout << "Error: función no definida" << std::endl;
