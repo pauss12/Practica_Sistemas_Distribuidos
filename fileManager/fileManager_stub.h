@@ -76,6 +76,7 @@ class FileManager_Stub
     
 
         ~FileManager() {
+
             FileManagerOp op = opDestructor;
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
@@ -83,10 +84,12 @@ class FileManager_Stub
             pack(rpcOut, op);
 
             sendMSG(serverConnection.serverId, rpcOut);
+
             recvMSG(serverConnection.serverId, rpcIn);
             if (rpcIn[0] != MSG_OK) {
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
             }
+            
             closeConnection(serverConnection.serverId);
         };
 
