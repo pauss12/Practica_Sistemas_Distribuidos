@@ -120,7 +120,7 @@ class FileManager_Stub
                     return nullptr;
                 } else {
                     int numFiles = unpack<int>(rpcIn);
-                    std::vector<std::string>* fileList = new std::vector<std::string>();
+                    //std::vector<std::string>* fileList = new std::vector<std::string>();
                     for (int i = 0; i < numFiles; i++) {
                         std::string fileName;
                         recvStringOp(serverConnection.serverId, fileName, opListFiles);

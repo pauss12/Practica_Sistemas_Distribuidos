@@ -38,6 +38,7 @@ public:
                 if (fileManager == nullptr) {
                     // Si no existe una instancia, crea una nueva.
                     fileManager = new FileManager(std::string("hola"));
+                    std::cout<<"Se creo el file manager\n";
                     pack(rpcOut, (unsigned char)MSG_OK);
 
                 } else {
@@ -50,6 +51,7 @@ public:
 
                 if (fileManager != nullptr) {
                     delete fileManager;
+                    std::cout<<"Se destruyo el file manager\n";
                     fileManager = nullptr;
                     pack(rpcOut, (unsigned char)MSG_OK);
 
