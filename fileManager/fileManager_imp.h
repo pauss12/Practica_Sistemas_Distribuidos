@@ -36,7 +36,8 @@ public:
             case opConstructor:
 
                 if (fileManager == nullptr) {
-                    fileManager = new FileManager();
+                    // Si no existe una instancia, crea una nueva.
+                    fileManager = new FileManager(std::string("hola"));
                     pack(rpcOut, (unsigned char)MSG_OK);
 
                 } else {

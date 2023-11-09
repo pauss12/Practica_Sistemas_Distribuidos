@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "operacionesFiles.h"
-#include "fileManager.h"
+#include "filemanager.h"
 
 //MIRAR LINEA 55
 /*
@@ -59,43 +59,54 @@ class FileManager_Stub
 
     public:
 
-        FileManager(const std::string& serverIP, int serverPort) {
+        FileManager_Stub(std::string path) {
+
             serverConnection = initClient(ip, port);
+
             FileManagerOp op = opConstructor;
+
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
 
             pack(rpcOut, op);
 
             sendMSG(serverConnection.serverId, rpcOut);
+
+            std::cout << "Enviando constructor\n";
+
             recvMSG(serverConnection.serverId, rpcIn);
+
             if (rpcIn[0] != MSG_OK) {
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
             }
-        }
-    
+        };
 
-        ~FileManager() {
+        ~FileManager_Stub() {
 
             FileManagerOp op = opDestructor;
+
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
 
             pack(rpcOut, op);
 
+            std::cout << "Enviando destructor\n";
+
             sendMSG(serverConnection.serverId, rpcOut);
 
             recvMSG(serverConnection.serverId, rpcIn);
+
             if (rpcIn[0] != MSG_OK) {
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
             }
             
-            closeConnection(serverConnection.serverId);
+            close(serverConnection.serverId);
         };
 
 
 /*
         std::vector<std::string>* listFiles() {
+
                 std::vector<unsigned char> rpcOut;
                 std::vector<unsigned char> rpcIn;
 

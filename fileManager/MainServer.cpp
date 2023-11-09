@@ -24,6 +24,7 @@ int main(int argc, char** argv)
 {
 	//iniciar un servidor
     auto serverSocket=initServer(60000);
+	//mientras haya clientes
     while(1){
 		//esperar conexiones en puerto
          while(!checkClient()){
