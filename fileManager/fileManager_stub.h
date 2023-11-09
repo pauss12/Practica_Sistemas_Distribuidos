@@ -85,71 +85,92 @@ class FileManager_Stub
             }
         };
 
-        /*
-        std::vector<std::string>* listFiles() {
+        std::vector<std::string> *listFiles() {
 
-                std::vector<unsigned char> rpcOut;
-                std::vector<unsigned char> rpcIn;
+            std::vector<unsigned char> rpcOut;
+            std::vector<unsigned char> rpcIn;
 
-                pack(rpcOut, opListFiles);
+            pack(rpcOut, opListFiles);
 
-                sendMSG(serverConnection.serverId, rpcOut);
-                recvMSG(serverConnection.serverId, rpcIn);
+            std::cout << "Ya he empaquetado la operacion\n";
 
-                if (rpcIn[0] != MSG_OK) {
-                    std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-                    return nullptr;
-                } else {
-                    int numFiles = unpack<int>(rpcIn);
-                    //std::vector<std::string>* fileList = new std::vector<std::string>();
-                    for (int i = 0; i < numFiles; i++) {
-                        std::string fileName;
-                        recvStringOp(serverConnection.serverId, fileName, opListFiles);
-                        fileList->push_back(fileName);
-                    }
-                    return fileList;
-                }
-        };
+            //Mandar la operacion que el cliente quiere hacer
+            sendMSG(serverConnection.serverId, rpcOut);
 
-            void readFile(const std::string& fileName, char* &data, unsigned long int &dataLength) {
-                std::vector<unsigned char> rpcOut;
-                std::vector<unsigned char> rpcIn;
+            std::cout << "Enviando listFiles\n";
 
-                pack(rpcOut,opReadFile);
-                sendStringOp(serverConnection.serverId, fileName,opReadFile);
+            //recibiendo la respuesta
+            recvMSG(serverConnection.serverId, rpcIn);
 
-                
-                recvMSG(serverConnection.serverId, rpcIn);
+            std::cout << "Recibiendo respuesta\n";
 
-                if (rpcIn[0] != MSG_OK) {
-                    std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-                } else {
-                    dataLength = unpack<unsigned long int>(rpcIn);
-                    data = new char[dataLength];
-                    
-                    recvMSG(serverConnection.serverId, rpcIn);
-                    for (unsigned long int i = 0; i < dataLength; i++) {
-                        data[i] = rpcIn[i];
-                    }
-                }
-            };
-
-            void writeFile(const std::string& fileName, const char* data, unsigned long int dataLength) {
-                std::vector<unsigned char> rpcOut;
-
-                pack(rpcOut,opWriteFile);
-                sendStringOp(serverConnection.serverId, fileName,opWriteFile);
-
-                pack(rpcOut, dataLength);
-                for (unsigned long int i = 0; i < dataLength; i++) {
-                    rpcOut.push_back(data[i]);
-                }
-
-                sendMSG(serverConnection.serverId, rpcOut);
+            if (rpcIn[0] != MSG_OK) {
+                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+                return nullptr;
             }
+                
+            // Desempaquetar la lista de archivos y agregarlos al vector 'fileList.'
+            int numFiles = unpack<int>(rpcIn);
 
-            void freeListedFiles(std::vector<std::string>* fileList) {
-                delete fileList;
-            };
-    */
+            std::cout << "Numero de ficheros: " << numFiles << "\n";
+
+            //Creo un vector de strings
+            std::vector<std::string*> *fileList = new std::vector<std::string*>[numFiles];
+
+            std::cout << "Creo el vector de strings\n";
+
+            //Desempaqueto la respuesta
+
+            for (int i = 0; i < numFiles; i++) {
+                
+                int fileNameLen = unpack<int>(rpcIn);
+                char fileName[fileNameLen];
+                unpackv(rpcIn, fileName, fileNameLen);
+                fileList->push_back(fileName);
+            }   
+           
+            return fileList;
+        };
+        /*
+                   void readFile(const std::string& fileName, char* &data, unsigned long int &dataLength) {
+                       std::vector<unsigned char> rpcOut;
+                       std::vector<unsigned char> rpcIn;
+
+                       pack(rpcOut,opReadFile);
+                       sendStringOp(serverConnection.serverId, fileName,opReadFile);
+
+
+                       recvMSG(serverConnection.serverId, rpcIn);
+
+                       if (rpcIn[0] != MSG_OK) {
+                           std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+                       } else {
+                           dataLength = unpack<unsigned long int>(rpcIn);
+                           data = new char[dataLength];
+
+                           recvMSG(serverConnection.serverId, rpcIn);
+                           for (unsigned long int i = 0; i < dataLength; i++) {
+                               data[i] = rpcIn[i];
+                           }
+                       }
+                   };
+
+                   void writeFile(const std::string& fileName, const char* data, unsigned long int dataLength) {
+                       std::vector<unsigned char> rpcOut;
+
+                       pack(rpcOut,opWriteFile);
+                       sendStringOp(serverConnection.serverId, fileName,opWriteFile);
+
+                       pack(rpcOut, dataLength);
+                       for (unsigned long int i = 0; i < dataLength; i++) {
+                           rpcOut.push_back(data[i]);
+                       }
+
+                       sendMSG(serverConnection.serverId, rpcOut);
+                   }
+
+                   void freeListedFiles(std::vector<std::string>* fileList) {
+                       delete fileList;
+                   };
+           */
 };

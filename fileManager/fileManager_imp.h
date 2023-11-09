@@ -74,33 +74,45 @@ public:
                 }
             }break;
 
-           case opListFiles:
+            case opListFiles:
+            {
                 if (fileManager != nullptr) {
+                    
                     // Si el FileManager está inicializado, realiza la operación "listFiles".
-                    std::vector<std::string*>* fileList = fileManager->listFiles();
-                    if (fileList != nullptr) {
-                        // Si la operación fue exitosa, empaqueta los resultados y envía un OK.
-                        pack(rpcOut, (unsigned char)MSG_OK);
-                        // Aquí debes implementar la lógica para empaquetar los nombres de archivos y sus tamaños en rpcOut.
-                    } else {
-                        // La operación "listFiles" falló, envía un error.
-                        pack(rpcOut, (unsigned char)MSG_NOK);
+                    std::vector<std::string*> *fileList = fileManager->listFiles();
+                    
+                    // Empaqueta la respuesta.
+                    pack(rpcOut, (unsigned char)MSG_OK);
+
+                    // Empaqueta la lista de archivos.
+                    int fileCount = fileList->size();
+                    pack(rpcOut, fileCount);
+                    for (int i = 0; i < fileCount; i++)
+                    {
+                        std::string *fileName = fileList->at(i);
+                        pack(rpcOut, fileName->c_str(), fileName->length());
                     }
+
+                    // Libera la memoria de la lista de archivos.
+                    fileManager->freeListedFiles(fileList);
+
                 } else {
                     // No hay una instancia de FileManager para realizar la operación, envía un error.
                     pack(rpcOut, (unsigned char)MSG_NOK);
                 }
-                break;
-            // Implementar el resto de operaciones (opReadFile, opWriteFile) de manera similar.
+                
+            }break;
+            
 
             default:
+            {
                 // Operación no definida, envía un error.
                 std::cout<<"Error: función no definida\n";
                 pack(rpcOut, (unsigned char)MSG_NOK);
-                break;
+            }break;
         }
 
         // Envía la respuesta al cliente.
         sendMSG(clientId, rpcOut);
-    }
+    };
 };
