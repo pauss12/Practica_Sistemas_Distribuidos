@@ -61,14 +61,18 @@ class FileManager_Stub
 
         FileManager_Stub(std::string path) {
 
-            serverConnection = initClient(ip, port);
-
-            FileManagerOp op = opConstructor;
-
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
 
+            FileManagerOp op = opConstructor;
+
+            serverConnection = initClient(ip, port);
+
             pack(rpcOut, op);
+
+            int tam = path.length() + 1;
+            pack(rpcOut, tam);
+            packv(rpcOut, path.c_str(), tam);
 
             sendMSG(serverConnection.serverId, rpcOut);
 
