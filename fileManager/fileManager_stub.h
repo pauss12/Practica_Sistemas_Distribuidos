@@ -85,30 +85,7 @@ class FileManager_Stub
             }
         };
 
-        ~FileManager_Stub() {
-
-            FileManagerOp op = opDestructor;
-
-            std::vector<unsigned char> rpcOut;
-            std::vector<unsigned char> rpcIn;
-
-            pack(rpcOut, op);
-
-            std::cout << "Enviando destructor\n";
-
-            sendMSG(serverConnection.serverId, rpcOut);
-
-            recvMSG(serverConnection.serverId, rpcIn);
-
-            if (rpcIn[0] != MSG_OK) {
-                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-            }
-            
-            close(serverConnection.serverId);
-        };
-
-
-/*
+        /*
         std::vector<std::string>* listFiles() {
 
                 std::vector<unsigned char> rpcOut;

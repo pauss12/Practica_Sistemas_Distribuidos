@@ -15,13 +15,14 @@ private:
 
 public:
 
-    FileManager_Imp(int clientId) : clientId(clientId), fileManager(nullptr){};
+    FileManager_Imp(int clientId) : clientId(clientId){};
 
     bool connectionClosed() {
         return fileManager == nullptr;
     }
 
     void recibeOp() {
+
         std::vector<unsigned char> rpcIn;
         std::vector<unsigned char> rpcOut;
 
@@ -34,20 +35,32 @@ public:
         switch (operacion) {
 
             case opConstructor:
+            {
+                if (fileManager == nullptr)
+                {
+                    // Recibir el path del directorio a administrar.
+                    std::string path;
+                    int pathLength = unpack<int>(rpcIn);
+                    path.resize(pathLength);
+                    unpackv(rpcIn, (char *)path.data(), pathLength);
 
-                if (fileManager == nullptr) {
-                    // Si no existe una instancia, crea una nueva.
-                    fileManager = new FileManager(std::string("hola"));
-                    std::cout<<"Se creo el file manager\n";
+                    std::cout << "Path: " << path << "\n";
+
+                    // Llamar al constructor del imp
+                    fileManager = new FileManager(path);
+
                     pack(rpcOut, (unsigned char)MSG_OK);
 
                 } else {
-                    // Ya existe una instancia, envía un error.
+
+                    // Ya hay una instancia creada, envía un error.
                     pack(rpcOut, (unsigned char)MSG_NOK);
                 }
-                break;
+                
+            }break;
 
             case opDestructor:
+            {
 
                 if (fileManager != nullptr) {
                     delete fileManager;
@@ -59,7 +72,7 @@ public:
                     // No hay una instancia para destruir, envía un error.
                     pack(rpcOut, (unsigned char)MSG_NOK);
                 }
-                break;
+            }break;
 
            case opListFiles:
                 if (fileManager != nullptr) {
