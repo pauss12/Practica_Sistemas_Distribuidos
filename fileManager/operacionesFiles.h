@@ -11,6 +11,7 @@ typedef enum FileManagerOp{
     opListFiles = 3,
     opReadFile = 4,
     opWriteFile = 5
+
 }FileManagerOp;
 
 
@@ -62,6 +63,7 @@ inline void unpackv(std::vector<unsigned char> &packet,T* data,int dataSize)
 
 // Enviar una solicitud para listar archivos al servidor del "FileManager."
 void sendListFiles(int id, FileManagerOp op) {
+    
     std::vector<unsigned char> rpcOut;
     pack(rpcOut, opListFiles);
     sendMSG(id, rpcOut);

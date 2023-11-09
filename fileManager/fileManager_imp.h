@@ -6,19 +6,16 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "operacionesFiles.h"
-#include "filemanager.h"
-
-//LOS CASES FALTAN
+#include "fileManager.h"
 
 class FileManager_Imp {
 private:
     int clientId =-1;
-    FileManager* fileManager = nullptr;
+    FileManager *fileManager = nullptr;
 
 public:
-    FileManager_Imp(int clientId) : clientId(clientId), fileManager(nullptr) {
-        
-    }
+
+    FileManager_Imp(int clientId) : clientId(clientId), fileManager(nullptr){};
 
     bool connectionClosed() {
         return fileManager == nullptr;
@@ -31,14 +28,17 @@ public:
         // Recibe operación
         recvMSG(clientId, rpcIn);
 
-       operacionesEnum operacion=unpack<operacionesEnum>(rpcIn);
+        FileManagerOp operacion = unpack<FileManagerOp>(rpcIn);
 
         // Ejecuta la operación correspondiente y genera una respuesta.
         switch (operacion) {
+
             case opConstructor:
+
                 if (fileManager == nullptr) {
                     fileManager = new FileManager();
                     pack(rpcOut, (unsigned char)MSG_OK);
+
                 } else {
                     // Ya existe una instancia, envía un error.
                     pack(rpcOut, (unsigned char)MSG_NOK);
@@ -46,10 +46,12 @@ public:
                 break;
 
             case opDestructor:
+
                 if (fileManager != nullptr) {
                     delete fileManager;
                     fileManager = nullptr;
                     pack(rpcOut, (unsigned char)MSG_OK);
+
                 } else {
                     // No hay una instancia para destruir, envía un error.
                     pack(rpcOut, (unsigned char)MSG_NOK);

@@ -4,12 +4,12 @@
 #include <iostream>
 #include "utils.h"
 #include <thread>	
-#include "filemanagerimp.h"
+#include "fileManager_imp.h"
 
 void atiendeCliente(int clientId){
 	
 	//Crear interfaz de servidor
-	FileManager_Imp = FileManager_Imp(clientId);
+	FileManager_Imp imp= FileManager_Imp(clientId);
 	//Mientras no cerre conexion
 	do{
 		//Atiende operacion
