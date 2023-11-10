@@ -29,8 +29,8 @@ inline void pack(std::vector<unsigned char> &packet,T data){
 template<typename T>
 inline void packv(std::vector<unsigned char> &packet,T* data,int dataSize)
 {
-	for(int i=0;i<dataSize;i++)
-			 	pack(packet,data[i]);
+	for(int i=0; i<dataSize; i++)
+		pack(packet, data[i]);
 }
 
 
@@ -56,7 +56,7 @@ inline T unpack(std::vector<unsigned char> &packet){
 template<typename T>
 inline void unpackv(std::vector<unsigned char> &packet,T* data,int dataSize)
 {
-	for(int i=0;i<dataSize;i++)
+	for(int i=0; i<dataSize; i++)
 		data[i]=unpack<T>(packet);
 }
 

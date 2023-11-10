@@ -114,7 +114,7 @@ void recvMSG(int clientID, std::vector<t> &data){
 
     //recv ack
     read(socket, &msg, sizeof(char));
-    if(msg!=ACK){
+    if(msg != ACK){
         printf("ERROR: recvMSG -- line : %d error fallo conexion\n", __LINE__);
         exit(0);//return error code
     }

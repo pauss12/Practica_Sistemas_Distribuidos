@@ -84,20 +84,41 @@ public:
                     // Empaqueta la respuesta.
                     pack(rpcOut, (unsigned char)MSG_OK);
 
+                    std::cout << "Empaquetado la operacion" << "\n";
+
                     // Empaqueta la lista de archivos.
                     int fileCount = fileList->size();
+
+                    //Reservar tamaño para el numero de ficheros de fileList
+                    fileList->reserve(fileCount);
+
+                    std::cout << "Numero de ficheros: " << fileCount << "\n";
+
                     pack(rpcOut, fileCount);
-                    for (int i = 0; i < fileCount; i++)
-                    {
+
+                    std::cout << "Empaquetado el numero de ficheros" << "\n";
+                    
+                    // Empaqueta los nombres de los archivos.
+                    for (int i = 0; i < fileCount; i++) {
                         std::string *fileName = fileList->at(i);
-                        pack(rpcOut, fileName->c_str(), fileName->length());
+                        //int fileNameLength = fileName->size();
+                        int fileNameLength = fileName->length() + 1;
+                        pack(rpcOut, fileNameLength);
+                        packv(rpcOut, (char *)fileName->data(), fileNameLength);
                     }
+
+                    std::cout << "Empaquetado la lista de ficheros" << "\n";
 
                     // Libera la memoria de la lista de archivos.
                     fileManager->freeListedFiles(fileList);
 
+                    std::cout << "Liberado la lista de ficheros" << "\n";
+
                 } else {
-                    // No hay una instancia de FileManager para realizar la operación, envía un error.
+                    // No hay una instancia de FileManager para realizar la operación, envía 
+                    //un error.
+                    std::cout<<"Error: no hay una instancia de FileManager\n";
+
                     pack(rpcOut, (unsigned char)MSG_NOK);
                 }
                 

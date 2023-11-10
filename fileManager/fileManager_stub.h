@@ -112,26 +112,22 @@ class FileManager_Stub
         };
 
         //LISTAR FICHEROS --------------------------------------
-        std::vector<std::string> *listFiles() {
+        std::vector<std::string*> *listFiles() {
 
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
 
             pack(rpcOut, opListFiles);
 
-            std::cout << "Ya he empaquetado la operacion\n";
-
             //Mandar la operacion que el cliente quiere hacer
             sendMSG(serverConnection.serverId, rpcOut);
-
-            std::cout << "Enviando listFiles\n";
 
             //recibiendo la respuesta
             recvMSG(serverConnection.serverId, rpcIn);
 
-            std::cout << "Recibiendo respuesta\n";
+            unsigned char ok = unpack<unsigned char>(rpcIn);
 
-            if (rpcIn[0] != MSG_OK) {
+            if (ok != MSG_OK) {
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
                 return nullptr;
             }
@@ -139,23 +135,22 @@ class FileManager_Stub
             // Desempaquetar la lista de archivos y agregarlos al vector 'fileList.'
             int numFiles = unpack<int>(rpcIn);
 
-            std::cout << "Numero de ficheros: " << numFiles << "\n";
-
             //Creo un vector de strings
-            std::vector<std::string*> *fileList = new std::vector<std::string*>;
-            fileList->reserve(numFiles);
-
-            std::cout << "Creo el vector de strings\n";
+            std::vector<std::string *> *fileList = new std::vector<std::string*>;
+            fileList->reserve(numFiles + 1);
 
             //Desempaqueto la respuesta
             for (int i = 0; i < numFiles; i++)
             {
                 int fileNameLen = unpack<int>(rpcIn);
+
                 char fileName[fileNameLen];
+
                 unpackv(rpcIn, fileName, fileNameLen);
 
                 // Create a new string object and add it to the vector.
                 fileList->push_back(new std::string(fileName));
+
             }
 
             return fileList;
