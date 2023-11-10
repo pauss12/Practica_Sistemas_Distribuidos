@@ -21,7 +21,7 @@ inline void pack(std::vector<unsigned char> &packet,T data){
 	int size=packet.size();
 	unsigned char *ptr=(unsigned char*)&data;
 	packet.resize(size+sizeof(T));
-	std::copy(ptr,ptr+sizeof(T),packet.begin()+size);
+	std::copy(ptr,ptr+sizeof(T),packet.begin() + size);
 	
 }
 

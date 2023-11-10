@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include "utils.h"
-#include <thread>	
+#include <thread>
+
+#include "operacionesFiles.h"
 #include "fileManager_imp.h"
 
 void atiendeCliente(int clientId){
@@ -17,7 +19,7 @@ void atiendeCliente(int clientId){
 		
 	}while(!imp.connectionClosed());
 	//Va a estar en el while hasta que se invoque al destructor
-};
+}
 
 
 int main(int argc, char** argv)
@@ -26,6 +28,7 @@ int main(int argc, char** argv)
     auto serverSocket=initServer(60000);
 	//mientras haya clientes
     while(1){
+
 		//esperar conexiones en puerto
          while(!checkClient()){
              usleep(100);
@@ -35,7 +38,7 @@ int main(int argc, char** argv)
        int clientId=getLastClientID();
 	   std::thread *th = new std::thread(atiendeCliente, clientId);
 	   th->join();
-   }
+    }
     close(serverSocket);
     return 0;
 }
