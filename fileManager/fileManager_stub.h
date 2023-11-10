@@ -59,6 +59,7 @@ class FileManager_Stub
 
     public:
 
+        //CONSTRUCTOR DEL CLIENTE ----------------------
         FileManager_Stub(std::string path) {
 
             std::vector<unsigned char> rpcOut;
@@ -85,6 +86,32 @@ class FileManager_Stub
             }
         };
 
+        //DESTRUCTOR DEL CLIENTE ---------------------------
+        ~FileManager_Stub()
+        {
+
+            FileManagerOp op = opDestructor;
+
+            std::vector<unsigned char> rpcOut;
+            std::vector<unsigned char> rpcIn;
+
+            pack(rpcOut, op);
+
+            std::cout << "Enviando destructor\n";
+
+            sendMSG(serverConnection.serverId, rpcOut);
+
+            recvMSG(serverConnection.serverId, rpcIn);
+
+            if (rpcIn[0] != MSG_OK)
+            {
+                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
+            }
+
+            close(serverConnection.serverId);
+        };
+
+        //LISTAR FICHEROS --------------------------------------
         std::vector<std::string> *listFiles() {
 
             std::vector<unsigned char> rpcOut;
@@ -115,22 +142,25 @@ class FileManager_Stub
             std::cout << "Numero de ficheros: " << numFiles << "\n";
 
             //Creo un vector de strings
-            std::vector<std::string*> *fileList = new std::vector<std::string*>[numFiles];
+            std::vector<std::string*> *fileList = new std::vector<std::string*>;
+            fileList->reserve(numFiles);
 
             std::cout << "Creo el vector de strings\n";
 
             //Desempaqueto la respuesta
-
-            for (int i = 0; i < numFiles; i++) {
-                
+            for (int i = 0; i < numFiles; i++)
+            {
                 int fileNameLen = unpack<int>(rpcIn);
                 char fileName[fileNameLen];
                 unpackv(rpcIn, fileName, fileNameLen);
-                fileList->push_back(fileName);
-            }   
-           
+
+                // Create a new string object and add it to the vector.
+                fileList->push_back(new std::string(fileName));
+            }
+
             return fileList;
         };
+        
         /*
                    void readFile(const std::string& fileName, char* &data, unsigned long int &dataLength) {
                        std::vector<unsigned char> rpcOut;

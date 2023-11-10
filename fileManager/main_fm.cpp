@@ -5,11 +5,11 @@ int main(int argc,char** argv)
 {
     FileManager_Stub *fm = new FileManager_Stub("./dirprueba/");
     
-    std::vector<string *> *vfiles = fm->listFiles();
+    std::vector<string *> *vfiles = *fm->listFiles();
 
     std::cout<<"Lista de ficheros en el directorio de prueba:\n";
 
-    for(int i=0;i<vfiles->size();i++)
+    for(int i=0; i<vfiles->size(); i++)
     {
         std::cout << "Fichero: " << vfiles->at(i)->c_str() << endl;
     }
