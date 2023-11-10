@@ -193,12 +193,27 @@ class FileManager_Stub
 
             pack(rpcOut, opWriteFile);
 
+            //Abrir el fichero en modo w+, es decir, si esta creado lo sobreescribe
+                                                    //sino, lo crea
+            FILE *f = fopen(fileName.c_str(), "w+");
+
+            //Escribir en el fichero
+
+
+            //Cerrar el fichero
+            fclose(f);
+
+        };
+
+        /*
+            ANTIGUA FUNCION, BASARSE EN ELLA
+            --------------------------------------------------------------------
             unsigned long int tam = fileName.length() + 1;
 
             std::cout << "Tamaño del nombre del fichero: " << tam << "\n" << std::endl;
 
             pack(rpcOut, tam);
-            
+
             std::cout << "Empaquetado el tamaño del nombre del fichero\n" << std::endl;
 
             packv(rpcOut, fileName.data(), tam);
@@ -239,7 +254,9 @@ class FileManager_Stub
 
             std::cout << "Desempaquetado los datos\n" << std::endl;
 
-        };
+            --------------------------------------------------------------------
+
+        */
 
         /*
         void freeListedFiles(std::vector<std::string> *fileList)
