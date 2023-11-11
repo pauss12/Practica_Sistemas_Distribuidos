@@ -193,15 +193,13 @@ class FileManager_Stub
 
             pack(rpcOut, opWriteFile);
 
-            //Abrir el fichero en modo w+, es decir, si esta creado lo sobreescribe
-                                                    //sino, lo crea
-            FILE *f = fopen(fileName.c_str(), "w+");
+            //Empaquetar el nombre del fichero
 
-            //Escribir en el fichero
+            //Empaquetar el dataLength
 
+            // Empaquetar el data
 
-            //Cerrar el fichero
-            fclose(f);
+            //Mandarlo al server
 
         };
 

@@ -19,17 +19,17 @@ template<typename T>
 inline void pack(std::vector<unsigned char> &packet, T data){
 	
 	int size = packet.size();
-	unsigned char *ptr=(unsigned char*)&data;
+	unsigned char *ptr = (unsigned char*)&data;
 	packet.resize(size + sizeof(T));
-	std::copy(ptr,ptr+sizeof(T),packet.begin() + size);
+	std::copy(ptr, ptr + sizeof(T), packet.begin() + size);
 	
 }
 
 
 template<typename T>
-inline void packv(std::vector<unsigned char> &packet,T* data,int dataSize)
+inline void packv(std::vector<unsigned char> &packet, T* data, int dataSize)
 {
-	for(int i=0; i<dataSize; i++)
+	for(int i = 0; i < dataSize; i++)
 		pack(packet, data[i]);
 }
 
@@ -37,14 +37,14 @@ inline void packv(std::vector<unsigned char> &packet,T* data,int dataSize)
 template<typename T>
 inline T unpack(std::vector<unsigned char> &packet){	
 	T data;
-	int dataSize=sizeof(T);
+	int dataSize = sizeof(T);
 	int packetSize=packet.size();
 	T* ptr=(T*)packet.data();
 	data=ptr[0];
 	
-	for(int i=dataSize; i<packetSize; i++)
+	for(int i = dataSize; i < packetSize; i++)
 	{
-		packet[i-dataSize] = packet[i];	
+		packet[i - dataSize] = packet[i];	
 	}
 	
 	packet.resize(packetSize - dataSize);
@@ -56,6 +56,6 @@ inline T unpack(std::vector<unsigned char> &packet){
 template<typename T>
 inline void unpackv(std::vector<unsigned char> &packet, T* data, int dataSize)
 {
-	for(int i=0; i<dataSize; i++)
+	for(int i = 0; i < dataSize; i++)
 		data[i] = unpack<T>(packet);
 }
