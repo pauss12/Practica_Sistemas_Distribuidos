@@ -22,13 +22,11 @@ int main(int argc,char** argv)
   
     std::cout << "Escribiendo el primer fichero del directorio de prueba:\n";
     fm->writeFile(&(*(vfiles->at(0)))[0], data, fileLen);
-    /*
-        std::cout << "Liberando lista de ficheros:\n";
-        fm->freeListedFiles(vfiles);
-        std::cout << "Liberando datos de fichero leÃ­do:\n";
 
-       
-    */
+    std::cout << "Liberando lista de ficheros:\n";
+    fm->freeListedFiles(vfiles);
+    std::cout << "Liberando datos de fichero leido:\n";
+
     delete[] data;
 
     return 0;
