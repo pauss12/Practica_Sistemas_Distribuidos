@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <cstring>
 #include <map>
 #include <vector>
 #include <dirent.h>
@@ -14,14 +15,19 @@ using namespace std;
 class FileManager
 {
     private:
-        string dirPath;
+        std::string dirPath;
+        
         map<string, string *> files;
 
     public:
         FileManager(string path);
+
         vector<string *> *listFiles();
+
         void readFile(char *fileName, char *&data, unsigned long int &dataLength);
+
         void writeFile(char *fileName, char *data, unsigned long int dataLength);
+
         void freeListedFiles(vector<string *> *fileList);
 };
 

@@ -94,22 +94,24 @@ void FileManager::readFile(char* fileName, char* &data, unsigned long int & data
 
 void FileManager::writeFile(char *fileName, char *data, unsigned long dataLength)
 {
-    //std::string path = this->dirPath + "/" + string(fileName);
-/*
     std::string path = this->dirPath;
+    //Añado el pop back porque tenia un caracter nulo al final del path y me estaba terminando la cadena
+    path.pop_back();
     path.append(fileName);
-*/
-
-    std::string fileNameStr = std::string(fileName);
-
-    std::string path = this->dirPath;
-    path.append(fileNameStr);
-
-    std::cout << "Escribiendo fichero en " << path << "\n";
-
-    std::cout << "El path es " << path.c_str() << "\n";
+    /*
+        for (int i = 0; i < hola.length(); i++)
+        {
+            std:cout<< "|" << hola.c_str()[i] << "|" << std::endl;
+        }
+    */
 
     FILE *f = fopen(path.c_str(), "w");
+
+    if (f == nullptr)
+    {
+        std::cout << "Error al abrir el fichero\n" << std::endl;
+        return ;
+    }
 
     fwrite(data, dataLength, 1, f);
 
@@ -119,44 +121,3 @@ void FileManager::writeFile(char *fileName, char *data, unsigned long dataLength
     if (files.find(string(fileName)) == files.end())
         files[string(fileName)] = new string(fileName);
 }
-
-/*
-void FileManager::writeFile(char* fileName, char* data, unsigned long dataLength)
-{
-
-    std::cout<<"Estamos dentro del filemanager.cpp"<< "\n";
-
-    //std::string path = this->dirPath + "/" + string(fileName);
-    std::string path = this->dirPath.append(string(fileName));
-
-    std::cout<<"Escribiendo fichero en "<< path <<"\n";
-
-    std::cout << "El path es " << path.data() << "\n";
-
-    FILE* f = fopen(path.c_str(), "w");
-
-    if(f == NULL)
-    {
-        std::cout<<"Error al abrir el fichero\n";
-        return;
-    }
-
-    std::cout<<"Fichero abierto\n";
-
-    fwrite(data, dataLength, 1, f);
-
-    std::cout << "Fichero escrito\n";
-
-    fclose(f);
-
-    std::cout << "Fichero cerrado\n";
-
-    //añadir a la lista el nuevo fichero, si no existe ya
-    if (files.find(string(fileName)) == files.end())
-        files[string(fileName)] = new string(fileName);
-    
-    std::cout << "Fichero añadido a la lista\n";
-
-}
-
-*/

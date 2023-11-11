@@ -186,7 +186,7 @@ class FileManager_Stub
             }
         };
 
-        void writeFile(const std::string &fileName, char *data, unsigned long int dataLength)
+        void writeFile(const std::string fileName, char *data, unsigned long int dataLength)
         {
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
