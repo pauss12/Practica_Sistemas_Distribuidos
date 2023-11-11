@@ -84,15 +84,12 @@ class FileManager_Imp {
                         // Si el FileManager está inicializado, realiza la operación "listFiles".
                         std::vector<std::string*> *fileList = fileManager->listFiles();
                         
-                        // Empaqueta la respuesta.
                         pack(rpcOut, (unsigned char)MSG_OK);
 
                         std::cout << "Empaquetado la operacion" << "\n";
 
-                        // Empaqueta la lista de archivos.
                         int fileCount = fileList->size();
 
-                        //Reservar tamaño para el numero de ficheros de fileList
                         fileList->reserve(fileCount);
 
                         std::cout << "Numero de ficheros: " << fileCount << "\n";
@@ -104,7 +101,6 @@ class FileManager_Imp {
                         // Empaqueta los nombres de los archivos.
                         for (int i = 0; i < fileCount; i++) {
                             std::string *fileName = fileList->at(i);
-                            //int fileNameLength = fileName->size();
                             int fileNameLength = fileName->length() + 1;
                             pack(rpcOut, fileNameLength);
                             packv(rpcOut, (char *)fileName->data(), fileNameLength);
@@ -112,14 +108,12 @@ class FileManager_Imp {
 
                         std::cout << "Empaquetado la lista de ficheros" << "\n";
 
-                        // Libera la memoria de la lista de archivos.
                         fileManager->freeListedFiles(fileList);
 
                         std::cout << "Liberado la lista de ficheros" << "\n";
 
                     } else {
-                        // No hay una instancia de FileManager para realizar la operación, envía 
-                        //un error.
+                        // No hay una instancia de FileManager para realizar la operación, envía un error.
                         std::cout<<"Error: no hay una instancia de FileManager\n";
 
                         pack(rpcOut, (unsigned char)MSG_NOK);
