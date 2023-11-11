@@ -207,6 +207,7 @@ class FileManager_Stub
 
         void freeListedFiles(std::vector<std::string*> *fileList)
         {
+
             for (int i = 0; i < fileList->size(); i++)
             {
                 delete fileList->at(i);
