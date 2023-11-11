@@ -102,12 +102,26 @@ int main(void)
                 
                 fm->freeListedFiles(vfiles);
 
-                delete[] data;
-
             }break;
 
             case 3:
             {
+                /*
+                --------------------------------------------------------
+                               // PROBARLO EN CASA
+   
+                // Pedir los datos al usuario por terminal
+                std::cout << "Introduce el nombre del fichero: ";
+
+                // Guardar el nombre del fichero en fileName hasta el espacio
+                std::cin >> fileName;
+
+                // Limpiar el buffer
+                while (getchar() != '\n')
+                    ;
+
+                --------------------------------------------------------
+                */
 
                 //Pedir un archivo remoto al usuario y descargarlo al directorio local
                 std::string fileName = "mundo.txt";
@@ -125,7 +139,7 @@ int main(void)
             case 4:
             {
                 printf("Saliendo...\n");
-                return 1;
+                break;
 
             }break;
 
@@ -137,9 +151,6 @@ int main(void)
         };
     
     } while (opcion != 4);
-
-    delete [] data;
-    delete fm;
 
     return 0;
 }
