@@ -201,6 +201,8 @@ class FileManager_Stub
 
             //Mandarlo al server
 
+            //¿QUE RECIBE EL SERVER?
+
         };
 
         void freeListedFiles(std::vector<std::string*> *fileList)

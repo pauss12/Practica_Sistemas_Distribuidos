@@ -1,6 +1,6 @@
 #include <iostream>
 #include "fileManager_Stub.h"
-
+/*
 int main(int argc,char** argv)
 {
     FileManager_Stub *fm = new FileManager_Stub("./dirprueba/");
@@ -31,30 +31,71 @@ int main(int argc,char** argv)
 
     return 0;
 }
-
-/*
-
-int main(int argc,char** argv)
+*/
+void mostrarComandos()
 {
-    FileManager *fm=new FileManager("./dirprueba/");
-    vector<string*>* vfiles=fm->listFiles();
-    cout<<"Lista de ficheros en el directorio de prueba:\n";
-    for(unsigned int i=0;i<vfiles->size();++i)
+    printf("Comandos:-------\n");
+    printf("1. ls\n");
+    printf("2. Upload \n");
+    printf("3. Download\n");
+}
+
+//MAIN MEJORADO
+int main(void)
+{
+    int opcion = 0;
+    FileManager_Stub *fm = new FileManager_Stub("./dirprueba/");
+
+    //Variables que necesito
+    std::vector<string *> *vfiles = nullptr;
+    char *data = nullptr;
+    unsigned long int fileLen = 0;
+
+    mostrarComandos();
+    scanf("%d", &opcion);
+
+    switch (opcion)
     {
-        cout<<"Fichero: "<<vfiles->at(i)->c_str()<<endl;
-    }
-    cout<<"Leyendo el primer fichero del directorio de prueba:\n";
+        case 1:
+        {
+            
+            //Listar archivos del directorio remoto
+            vfiles = fm->listFiles();
 
-    char* data=nullptr;
-    unsigned long int fileLen=0;
-    fm->readFile(&(*(vfiles->at(0)))[0],data,fileLen);
-    cout<<"Escribiendo el primer fichero del directorio de prueba:\n";
-    fm->writeFile(&(*(vfiles->at(0)))[0],data,fileLen);
-    cout<<"Liberando lista de ficheros:\n";
-    fm->freeListedFiles(vfiles);
-    cout<<"Liberando datos de fichero leído:\n";
+            for (int i = 0; i < vfiles->size(); i++)
+            {
+                std::cout << " --- Fichero: " << vfiles->at(i)->c_str() << endl;
+            }
 
-    delete[] data;
+        }break;
+
+        case 2:
+        {
+
+            //Pedir un archivo local al usuario y subirlo al directorio remoto
+            fm->writeFile(&(*(vfiles->at(0)))[0], data, fileLen);
+            std::cout << "Liberando lista de ficheros:\n";
+            fm->freeListedFiles(vfiles);
+
+        }break;
+
+        case 3:
+        {
+
+            //Pedir un archivo remoto al usuario y descargarlo al directorio local
+            fm->readFile(&(*(vfiles->at(0)))[0], data, fileLen);
+
+        }break;
+
+        default:
+        {
+            printf("Comando no reconocido\n");
+        }break;
+
+    };
+
+    delete [] data;
+    delete fm;
+
     return 0;
 }
-*/
