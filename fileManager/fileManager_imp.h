@@ -179,8 +179,10 @@ class FileManager_Imp {
 
                         // Recibir el nombre del archivo a escribir.
                         std::string fileName;
+
                         int fileNameLength = unpack<int>(rpcIn);
                         fileName.resize(fileNameLength);
+
                         unpackv(rpcIn, (char *)fileName.data(), fileNameLength);
 
                         std::cout << "Nombre del archivo: " << fileName << "\n" << std::endl;
@@ -188,11 +190,14 @@ class FileManager_Imp {
                         // Recibir el contenido del archivo.
                         unsigned long int dataLength = unpack<unsigned long int>(rpcIn);
                         char *data = new char[dataLength];
-                        unpackv(rpcIn, data, dataLength);
+
+                        for (unsigned long int i = 0; i < dataLength; i++) {
+                            data[i] = rpcIn[i];
+                        }
 
                         std::cout << "Contenido del archivo: " << data << "\n" << std::endl;
 
-                        // Escribir el archivo.
+                        //llamar a la funcion writeFile
                         fileManager->writeFile((char *)fileName.data(), data, dataLength);
 
                         std::cout << "Archivo escrito" << "\n" << std::endl;
@@ -201,21 +206,6 @@ class FileManager_Imp {
                         pack(rpcOut, (unsigned char)MSG_OK);
 
                         std::cout << "Empaquetado la operacion" << "\n" << std::endl;
-
-                        //Empaqueta el tamaño del archivo
-                        pack(rpcOut, dataLength);
-
-                        //Empaquetar la cadena
-                        packv(rpcOut, data, dataLength);
-
-                        sendMSG(clientId, rpcOut);
-
-                        std::cout << "Empaquetado el tamaño del archivo" << "\n" << std::endl;
-
-                        // Libera la memoria del archivo.
-                        delete[] data;
-
-                        std::cout << "Liberado el archivo" << "\n" << std::endl;
 
                         std::cout << "--------------------------------------------" << "\n" << std::endl;
                     } else {

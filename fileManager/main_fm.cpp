@@ -83,7 +83,13 @@ int main(void)
         {
 
             //Pedir un archivo remoto al usuario y descargarlo al directorio local
-            fm->readFile(&(*(vfiles->at(0)))[0], data, fileLen);
+            std::string fileName = "mundo.txt";
+            data = "hola mundo";
+
+            //calcular el tamaño de data
+            int fileLen = strlen(data) + 1;
+
+            fm->readFile(fileName, data, fileLen);
 
         }break;
 
