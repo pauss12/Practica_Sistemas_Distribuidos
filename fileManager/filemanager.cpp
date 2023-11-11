@@ -92,14 +92,71 @@ void FileManager::readFile(char* fileName, char* &data, unsigned long int & data
  * @param dataLength Longitud del fichero en bytes
  */
 
+void FileManager::writeFile(char *fileName, char *data, unsigned long dataLength)
+{
+    //std::string path = this->dirPath + "/" + string(fileName);
+/*
+    std::string path = this->dirPath;
+    path.append(fileName);
+*/
+
+    std::string fileNameStr = std::string(fileName);
+
+    std::string path = this->dirPath;
+    path.append(fileNameStr);
+
+    std::cout << "Escribiendo fichero en " << path << "\n";
+
+    std::cout << "El path es " << path.c_str() << "\n";
+
+    FILE *f = fopen(path.c_str(), "w");
+
+    fwrite(data, dataLength, 1, f);
+
+    fclose(f);
+
+    // añadir a la lista el nuevo fichero, si no existe ya
+    if (files.find(string(fileName)) == files.end())
+        files[string(fileName)] = new string(fileName);
+}
+
+/*
 void FileManager::writeFile(char* fileName, char* data, unsigned long dataLength)
 {
-    string path=this->dirPath+"/"+string(fileName);
-    FILE* f=fopen(path.c_str(),"w");
-    fwrite(data,dataLength,1,f);
+
+    std::cout<<"Estamos dentro del filemanager.cpp"<< "\n";
+
+    //std::string path = this->dirPath + "/" + string(fileName);
+    std::string path = this->dirPath.append(string(fileName));
+
+    std::cout<<"Escribiendo fichero en "<< path <<"\n";
+
+    std::cout << "El path es " << path.data() << "\n";
+
+    FILE* f = fopen(path.c_str(), "w");
+
+    if(f == NULL)
+    {
+        std::cout<<"Error al abrir el fichero\n";
+        return;
+    }
+
+    std::cout<<"Fichero abierto\n";
+
+    fwrite(data, dataLength, 1, f);
+
+    std::cout << "Fichero escrito\n";
+
     fclose(f);
-//añadir a la lista el nuevo fichero, si no existe ya
-    if(files.find(string(fileName))==files.end())
-        files[ string(fileName)]=new string(fileName);
+
+    std::cout << "Fichero cerrado\n";
+
+    //añadir a la lista el nuevo fichero, si no existe ya
+    if (files.find(string(fileName)) == files.end())
+        files[string(fileName)] = new string(fileName);
+    
+    std::cout << "Fichero añadido a la lista\n";
 
 }
+
+*/

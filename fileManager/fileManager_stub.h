@@ -155,7 +155,7 @@ class FileManager_Stub
             return fileList;
         };
 
-        void readFile(const std::string &fileName, char *data, unsigned long int dataLength)
+        void readFile(std::string &fileName, char *data, unsigned long int dataLength)
         {
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
@@ -164,7 +164,7 @@ class FileManager_Stub
 
             int tam = fileName.length() + 1;
             pack(rpcOut, tam);
-            packv(rpcOut, fileName.c_str(), tam);
+            packv(rpcOut, fileName.data(), tam);
 
             sendMSG(serverConnection.serverId, rpcOut);
 

@@ -34,7 +34,7 @@ int main(int argc,char** argv)
 */
 void mostrarComandos()
 {
-    printf("Comandos:-------\n");
+    printf("\nComandos:-------\n");
     printf("1. ls\n");
     printf("2. Upload \n");
     printf("3. Download\n");
@@ -55,7 +55,6 @@ int main(void)
 
     do {
 
-        printf("Introduzca un comando:\n");
         mostrarComandos();
         scanf("%d", &opcion);
 
@@ -76,13 +75,21 @@ int main(void)
 
             case 2:
             {
-
                 //Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
 
-                //NO ESTA CREADO EN EL CLIENTE, SE LO PASA COMO ARGUMENTO AL SERVER
-                std::string fileName = "mundo.txt";
+                std::string fileName;
 
-                data_string = "hola mundo";
+                //Pedir los datos al usuario por terminal
+                std::cout << "Introduce el nombre del fichero: ";
+                
+                //Guardar el nombre del fichero en fileName hasta el espacio
+                std::cin >> fileName;
+                
+                //Limpiar el buffer
+                while(getchar() != '\n');
+
+                std::cout << "Introduce el contenido del fichero: ";
+                std::getline(std::cin, data_string);
 
                 data = (char *)data_string.data();
 
@@ -94,6 +101,8 @@ int main(void)
                 std::cout << "Liberando lista de ficheros:\n";
                 
                 fm->freeListedFiles(vfiles);
+
+                delete[] data;
 
             }break;
 

@@ -79,25 +79,17 @@ class FileManager_Imp {
                 {
                     if (fileManager != nullptr) {
 
-                        std::cout << "OPERACION LIST FILE" << "\n" << std::endl;
-
                         // Si el FileManager está inicializado, realiza la operación "listFiles".
                         std::vector<std::string*> *fileList = fileManager->listFiles();
                         
                         pack(rpcOut, (unsigned char)MSG_OK);
 
-                        std::cout << "Empaquetado la operacion" << "\n";
-
                         int fileCount = fileList->size();
 
                         fileList->reserve(fileCount);
 
-                        std::cout << "Numero de ficheros: " << fileCount << "\n";
-
                         pack(rpcOut, fileCount);
-
-                        std::cout << "Empaquetado el numero de ficheros" << "\n";
-                        
+        
                         // Empaqueta los nombres de los archivos.
                         for (int i = 0; i < fileCount; i++) {
                             std::string *fileName = fileList->at(i);
@@ -106,11 +98,7 @@ class FileManager_Imp {
                             packv(rpcOut, (char *)fileName->data(), fileNameLength);
                         }
 
-                        std::cout << "Empaquetado la lista de ficheros" << "\n";
-
                         fileManager->freeListedFiles(fileList);
-
-                        std::cout << "Liberado la lista de ficheros" << "\n";
 
                     } else {
                         // No hay una instancia de FileManager para realizar la operación, envía un error.
@@ -127,43 +115,24 @@ class FileManager_Imp {
                 {
                     if (fileManager != nullptr) {
 
-                        std::cout << "OPERACION READ FILE" << "\n" << std::endl;
-
-                        // Recibir el nombre del archivo a leer.
                         std::string fileName;
                         int fileNameLength = unpack<int>(rpcIn);
                         fileName.resize(fileNameLength);
                         unpackv(rpcIn, (char *)fileName.data(), fileNameLength);
 
-                        std::cout << "Nombre del archivo: " << fileName << "\n" << std::endl;
-
-                        // Leer el archivo.
                         char *data = nullptr;
                         unsigned long int dataLength = 0;
                         fileManager->readFile((char *)fileName.data(), data, dataLength);
 
-                        std::cout << "Archivo leido" << "\n";
-
-                        // Empaqueta la respuesta.
                         pack(rpcOut, (unsigned char)MSG_OK);
 
-                        std::cout << "Empaquetado la operacion" << "\n" << std::endl;
-
-                        // Empaqueta el contenido del archivo.
                         pack(rpcOut, dataLength);
                         packv(rpcOut, data, dataLength);
 
-                        std::cout << "Empaquetado el contenido del archivo" << "\n" << std::endl;
-
-                        // Libera la memoria del archivo.
                         delete[] data;
 
-                        std::cout << "Liberado el archivo" << "\n" << std::endl;
-
-                        std::cout << "--------------------------------------------" << "\n" << std::endl;
                     } else {
-                        // No hay una instancia de FileManager para realizar la operación, envía 
-                        //un error.
+
                         std::cout<<"Error: no hay una instancia de FileManager\n" << std::endl;
 
                         pack(rpcOut, (unsigned char)MSG_NOK);
