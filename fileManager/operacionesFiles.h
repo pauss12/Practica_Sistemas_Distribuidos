@@ -39,7 +39,7 @@ template<typename T>
 inline T unpack(std::vector<unsigned char> &packet){	
 	T data;
 	int dataSize = sizeof(T);
-	int packetSize=packet.size();
+	int packetSize = packet.size();
 	T* ptr=(T*)packet.data();
 	data=ptr[0];
 	

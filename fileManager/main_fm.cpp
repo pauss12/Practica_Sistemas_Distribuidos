@@ -38,6 +38,7 @@ void mostrarComandos()
     printf("1. ls\n");
     printf("2. Upload \n");
     printf("3. Download\n");
+    printf("4. Salir\n");
 }
 
 //MAIN MEJORADO
@@ -48,57 +49,85 @@ int main(void)
 
     //Variables que necesito
     std::vector<string *> *vfiles = nullptr;
+    std::string data_string;
     char *data = nullptr;
     unsigned long int fileLen = 0;
 
-    mostrarComandos();
-    scanf("%d", &opcion);
+    do {
 
-    switch (opcion)
-    {
-        case 1:
+        printf("Introduzca un comando:\n");
+        mostrarComandos();
+        scanf("%d", &opcion);
+
+        switch (opcion)
         {
-            
-            //Listar archivos del directorio remoto
-            vfiles = fm->listFiles();
-
-            for (int i = 0; i < vfiles->size(); i++)
+            case 1:
             {
-                std::cout << " --- Fichero: " << vfiles->at(i)->c_str() << endl;
-            }
+                
+                //Listar archivos del directorio remoto
+                vfiles = fm->listFiles();
 
-        }break;
+                for (int i = 0; i < vfiles->size(); i++)
+                {
+                    std::cout << " --- Fichero: " << vfiles->at(i)->c_str() << endl;
+                }
 
-        case 2:
-        {
+            }break;
 
-            //Pedir un archivo local al usuario y subirlo al directorio remoto
-            fm->writeFile(&(*(vfiles->at(0)))[0], data, fileLen);
-            std::cout << "Liberando lista de ficheros:\n";
-            fm->freeListedFiles(vfiles);
+            case 2:
+            {
 
-        }break;
+                //Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
 
-        case 3:
-        {
+                //NO ESTA CREADO EN EL CLIENTE, SE LO PASA COMO ARGUMENTO AL SERVER
+                std::string fileName = "mundo.txt";
 
-            //Pedir un archivo remoto al usuario y descargarlo al directorio local
-            std::string fileName = "mundo.txt";
-            data = "hola mundo";
+                data_string = "hola mundo";
 
-            //calcular el tamaño de data
-            int fileLen = strlen(data) + 1;
+                data = (char *)data_string.data();
 
-            fm->readFile(fileName, data, fileLen);
+                //calcular el tamaño de data
+                int fileLen = data_string.length() + 1;
 
-        }break;
+                fm->writeFile(fileName, data, fileLen);
 
-        default:
-        {
-            printf("Comando no reconocido\n");
-        }break;
+                std::cout << "Liberando lista de ficheros:\n";
+                
+                fm->freeListedFiles(vfiles);
 
-    };
+            }break;
+
+            case 3:
+            {
+
+                //Pedir un archivo remoto al usuario y descargarlo al directorio local
+                std::string fileName = "mundo.txt";
+                data_string = "hola mundo";
+
+                data = (char *)data_string.data();
+
+                //calcular el tamaño de data
+                int fileLen = data_string.length() + 1;
+
+                fm->readFile(fileName, data, fileLen);
+
+            }break;
+
+            case 4:
+            {
+                printf("Saliendo...\n");
+                return 1;
+
+            }break;
+
+            default:
+            {
+                printf("Comando no reconocido\n");
+            }break;
+
+        };
+    
+    } while (opcion != 4);
 
     delete [] data;
     delete fm;

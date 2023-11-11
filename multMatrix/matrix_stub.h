@@ -132,16 +132,13 @@ class multMatrix_stub
 
 			matrix_t *matrizPrueba = new matrix_t();
 
-			//Empaquetar la operacion
 			pack(rpcOut, opCrearIdentidad);
 
-			//Empaquetar las filas y columnas
 			pack(rpcOut, filas);
 			pack(rpcOut, columnas);
 
 			sendMSG(serverConnection.serverId, rpcOut);
 
-			// Comprobar que se han enviado bien
 			recvMSG(serverConnection.serverId, rpcIn);
 
 			unsigned char ok = unpack<unsigned char>(rpcIn);
@@ -149,11 +146,9 @@ class multMatrix_stub
 			if (ok != MSG_OK)
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 
-			//Desempaquetar las filas y columnas de la matriz
 			matrizPrueba->rows = unpack<int>(rpcIn);
 			matrizPrueba->cols = unpack<int>(rpcIn);
 
-			//Desempaquetar los datos de la matriz
 			matrizPrueba->data = new int[matrizPrueba->rows * matrizPrueba->cols];
 			unpackv(rpcIn, matrizPrueba->data, matrizPrueba->rows * matrizPrueba->cols);
 
@@ -169,10 +164,8 @@ class multMatrix_stub
 
 			matrix_t *matrizRandom = new matrix_t();
 
-			//Empaquetar la operacion
 			pack(rpcOut, opCrearRandom);
 
-			//Empaquetar las filas y columnas
 			pack(rpcOut, filas);
 			pack(rpcOut, columnas);
 
@@ -185,11 +178,9 @@ class multMatrix_stub
 			if (ok != MSG_OK)
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 
-			//Desempaquetar las filas y columnas de la matriz
 			matrizRandom->rows = unpack<int>(rpcIn);
 			matrizRandom->cols = unpack<int>(rpcIn);
 
-			//Desempaquetar los datos de la matriz
 			matrizRandom->data = new int[matrizRandom->rows * matrizRandom->cols];
 			unpackv(rpcIn, matrizRandom->data, matrizRandom->rows * matrizRandom->cols);
 
@@ -205,17 +196,13 @@ class multMatrix_stub
 
 			matrix_t *resultado = new matrix_t();
 
-			//Empaquetar la operacion
 			pack(rpcOut, opMultiplicarMatrices);
 
-			// Empaquetar las matrices A y B
 			packMatrix(rpcOut, matrizA->data, matrizA->rows, matrizA->cols);
 			packMatrix(rpcOut, matrizB->data, matrizB->rows, matrizB->cols);
 
-			//Enviar el mensaje
 			sendMSG(serverConnection.serverId, rpcOut);
 
-			//Recibir lo que el cliente envia, es decir si ha llegado bien y las matrices
 			recvMSG(serverConnection.serverId, rpcIn);
 
 			unsigned char ok = unpack<unsigned char>(rpcIn);
@@ -223,7 +210,6 @@ class multMatrix_stub
 			if (ok != MSG_OK)
 				std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
 			
-			// Desempaquetar la matriz resultado
 			resultado->rows = unpack<int>(rpcIn);
 			resultado->cols = unpack<int>(rpcIn);
 			
