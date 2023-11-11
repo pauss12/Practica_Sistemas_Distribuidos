@@ -197,6 +197,13 @@ class FileManager_Imp {
 
                         std::cout << "Contenido del archivo: " << data << "\n" << std::endl;
 
+                        //Comprobar si el fileName no es nulo
+                        if (fileName.empty()) {
+                            std::cout << "Error: el nombre del archivo no puede ser nulo" << "\n" << std::endl;
+                            pack(rpcOut, (unsigned char)MSG_NOK);
+                            break;
+                        }
+
                         //llamar a la funcion writeFile
                         fileManager->writeFile((char *)fileName.data(), data, dataLength);
 
@@ -208,7 +215,7 @@ class FileManager_Imp {
                         std::cout << "Empaquetado la operacion" << "\n" << std::endl;
 
                         std::cout << "--------------------------------------------" << "\n" << std::endl;
-                        
+
                     } else {
                         // No hay una instancia de FileManager para realizar la operación, envía 
                         //un error.
