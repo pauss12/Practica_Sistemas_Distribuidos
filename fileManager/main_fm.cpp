@@ -48,14 +48,24 @@ int main(void)
             case 2:
             {
                 //Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
-                std::string fileName;
+                std::string aux;
 
-                //Pedir los datos al usuario por terminal
-                std::cout << "Introduce el nombre del fichero: ";
-                
-                //Guardar el nombre del fichero en fileName hasta el espacio
-                std::cin >> fileName;
-                
+                std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
+
+                // Coger la linea entera
+                std::getline(std::cin, aux);
+
+                int tam = aux.size() + 1;
+
+                char *fileName = new char[tam];
+
+                for (int i = 0; i < tam; i++)
+                {
+                    fileName[i] = aux[i];
+                }
+
+                fileName[tam] = '\0';
+
                 //Limpiar el buffer
                 while(getchar() != '\n');
 

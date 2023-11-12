@@ -140,7 +140,17 @@ class FileManager_Stub
             dataLength = unpack<unsigned long int>(rpcIn);
             data = new char[dataLength];
 
-            unpackv(rpcIn, data, dataLength);         
+            unpackv(rpcIn, data, dataLength);
+
+            char *path_local = new char[tam + dataLength + 1];
+            strcpy(path_local, "./dirprueba/");
+            strcat(path_local, fileName);
+
+            FILE *f = fopen(path_local, "w");
+
+            fwrite(data, dataLength, 1, f);
+
+            fclose(f);
 
             std::cout << "El contenido del fichero [" << fileName << "] es: " << data << std::endl;
 
