@@ -138,6 +138,9 @@ class FileManager_Stub
             data = new char[dataLength];
 
             unpackv(rpcIn, data, dataLength);
+
+            std::cout << "El contenido del fichero [" << fileName << "] es: " << data << std::endl;
+
         };
 
         // WRITE FILE --------

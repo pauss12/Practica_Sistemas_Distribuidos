@@ -1,4 +1,5 @@
 #include <iostream>
+#include "utils.h"
 #include "fileManager_stub.h"
 
 void mostrarComandos()
@@ -106,9 +107,8 @@ int main(void)
             {
                 printf("Saliendo...\n");
                 
-                //Llamar al destructor del cliente
-                fm->~FileManager_Stub();
-
+                //Cerrar la conexion
+                closeConnection(fm.serverConnection.serverId);
                 break;
 
             }break;
