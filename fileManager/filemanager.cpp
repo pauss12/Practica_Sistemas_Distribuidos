@@ -83,7 +83,7 @@ void FileManager::readFile(char* fileName, char* &data, unsigned long int & data
     fseek(f, 0L, SEEK_SET);
     data=new char[dataLength];
 
-    fread(data,dataLength,1,f);
+    fread(data, dataLength, 1, f);
     fclose(f);
 }
 

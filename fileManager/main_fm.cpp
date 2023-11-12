@@ -29,6 +29,8 @@ int main(void)
         mostrarComandos();
         scanf("%d", &opcion);
 
+        while (getchar() != '\n');
+
         switch (opcion)
         {
             case 1:
@@ -73,14 +75,24 @@ int main(void)
             case 3:
             {
 
-                std::string fileName;
-                //Pedir un archivo remoto al usuario y descargarlo al directorio local
+                // Pedir el nombre de un archivo al usuario y descargarlo del directorio remoto
+                std::string aux;
 
                 std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
 
-                std::cin >> fileName;
+                //Coger la linea entera
+                std::getline(std::cin, aux);
 
-                while (getchar() != '\n');
+                int tam = aux.size() + 1;
+
+                char *fileName = new char[tam];
+
+                for (int i = 0; i < tam; i++)
+                {
+                    fileName[i] = aux[i];
+                }
+
+                fileName[tam] = '\0';
 
                 data = nullptr;
                 fileLen = 0;
@@ -88,7 +100,6 @@ int main(void)
                 int fileLen = data_string.length() + 1;
 
                 fm->readFile(fileName, data, fileLen);
-
             }break;
 
             case 4:
@@ -109,7 +120,7 @@ int main(void)
 
         };
     
-    } while (opcion != 4);
+    } while (opcion != 4 || (opcion < 1 || opcion > 4));
 
     return 0;
 }

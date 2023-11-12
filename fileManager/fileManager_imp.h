@@ -73,6 +73,7 @@ class FileManager_Imp {
 
                         pack(rpcOut, (unsigned char)MSG_NOK);
                     }
+
                 }break;
 
                 case opListFiles:
@@ -115,32 +116,37 @@ class FileManager_Imp {
 
                 case opReadFile:
                 {
-                    if (fileManager != nullptr) {
+                    if (fileManager != nullptr)
+                    {
 
-                        std::string fileName;
                         int fileNameLength = unpack<int>(rpcIn);
-                        fileName.resize(fileNameLength);
-                        unpackv(rpcIn, (char *)fileName.data(), fileNameLength);
+
+                        char *fileName = new char[fileNameLength];
+
+                        unpackv(rpcIn, fileName, fileNameLength);
 
                         char *data = nullptr;
                         unsigned long int dataLength = 0;
-                        fileManager->readFile((char *)fileName.data(), data, dataLength);
+
+                        fileManager->readFile(fileName, data, dataLength);
 
                         pack(rpcOut, (unsigned char)MSG_OK);
 
                         pack(rpcOut, dataLength);
-                        
+
                         packv(rpcOut, data, dataLength);
 
                         delete[] data;
+                    }
+                    else
+                    {
 
-                    } else {
-
-                        std::cout<<"Error: no hay una instancia de FileManager\n" << std::endl;
+                        std::cout << "Error: no hay una instancia de FileManager\n"
+                                  << std::endl;
                         pack(rpcOut, (unsigned char)MSG_NOK);
                     }
-
-                }break;
+                }
+                break;
 
                 case opWriteFile:
                 {
@@ -157,16 +163,14 @@ class FileManager_Imp {
                         unsigned long int dataLength = unpack<unsigned long int>(rpcIn);
                         char *data = new char[dataLength];
 
-                        for (unsigned long int i = 0; i < dataLength; i++) {
-                            data[i] = rpcIn[i];
-                        }
+                        unpackv(rpcIn, data, dataLength);
 
                         // Comprobar si el fileName no es nulo y si el data no es nulo
                         if (fileName.empty() || data == nullptr)
                         {
                             std::cout << "Error: el nombre del fichero o el contenido del fichero es nulo\n";
                             pack(rpcOut, (unsigned char)MSG_NOK);
-                            return;
+                            return ;
                         }
 
                         fileManager->writeFile((char *)fileName.data(), data, dataLength);

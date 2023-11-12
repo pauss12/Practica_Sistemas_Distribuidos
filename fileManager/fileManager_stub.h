@@ -7,52 +7,10 @@
 #include "operacionesFiles.h"
 #include "filemanager.h"
 
-//MIRAR LINEA 55
-/*
-
-  void sendStringOp(int serverId, const std::string& dato, FileManagerOp op) {
-        std::vector<unsigned char> rpcOut;
-        std::vector<unsigned char> rpcIn;
-
-        pack(rpcOut, op);
-
-        int tam = dato.length() + 1;
-        pack(rpcOut, tam);
-        packv(rpcOut, dato.c_str(), tam);
-
-        sendMSG(serverId, rpcOut);
-        recvMSG(serverId, rpcIn);
-
-        if (rpcIn[0] != MSG_OK) {
-            std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-        }
-    }
-
-
-    void recvStringOp(int serverId, std::string& dato, FileManagerOp op) {
-        std::vector<unsigned char> rpcOut;
-        std::vector<unsigned char> rpcIn;
-
-        pack(rpcOut, op);
-        sendMSG(serverId, rpcOut);
-
-        recvMSG(serverId, rpcIn);
-        unsigned char ok = unpack<unsigned char>(rpcIn);
-
-        if (ok != MSG_OK) {
-            std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n";
-        } else {
-            int tam = unpack<int>(rpcIn);
-            dato.resize(tam);
-            unpackv(rpcIn, (char*)dato.data(), tam);
-        }
-    }
-*/
-
 class FileManager_Stub
 {
     private:
-        // std::string ip = "172.31.56.112";
+        // std::string ip = "172.31.51.119";
         std::string ip = "127.0.0.1";
         int port = 60000;
         connection_t serverConnection;
@@ -152,17 +110,17 @@ class FileManager_Stub
         };
 
         // READ FILE ---------
-        void readFile(std::string &fileName, char *data, unsigned long int dataLength)
+        void readFile(char *fileName, char *data, unsigned long int dataLength)
         {
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
 
             pack(rpcOut, opReadFile);
 
-            //Empaquetar el nombre del fichero que se quiere leer
-            int tam = fileName.length() + 1;
+            int tam = strlen(fileName) + 1;
+
             pack(rpcOut, tam);
-            packv(rpcOut, fileName.data(), tam);
+            packv(rpcOut, fileName, tam);
 
             sendMSG(serverConnection.serverId, rpcOut);
 
@@ -180,8 +138,6 @@ class FileManager_Stub
             data = new char[dataLength];
 
             unpackv(rpcIn, data, dataLength);
-
-            std::cout << "Data: " << data << std::endl;
         };
 
         // WRITE FILE --------
