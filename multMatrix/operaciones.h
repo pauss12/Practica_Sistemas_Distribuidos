@@ -27,9 +27,9 @@ inline void pack(std::vector<unsigned char> &packet, T data) {
 
 //EMPAQUETAR UN ARRAY ------------------------------------------------------------------------------
 template<typename T>
-inline void packv(std::vector<unsigned char> &packet,T* data, int dataSize){
+inline void packv(std::vector<unsigned char> &packet, T* data, int dataSize){
 	
-	for(int i=0;i<dataSize;i++)
+	for(int i=0; i < dataSize; i++)
 		pack(packet, data[i]);
 }
 
