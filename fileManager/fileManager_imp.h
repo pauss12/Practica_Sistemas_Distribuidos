@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "operacionesFiles.h"
-#include "fileManager.h"
+#include "filemanager.h"
 
 class FileManager_Imp {
 
