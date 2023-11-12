@@ -113,7 +113,7 @@ class FileManager_Stub
         };
 
         // READ FILE ---------
-        void readFile(char *fileName, char *data, unsigned long int dataLength)
+        void readFile(char *fileName, char *&data, unsigned long int &dataLength)
         {
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;

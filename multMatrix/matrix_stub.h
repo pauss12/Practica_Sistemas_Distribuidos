@@ -64,7 +64,7 @@ class multMatrix_stub
 		};
 
 		// Leer la matriz
-		matrix_t *leerMatriz(const std::string &rutaArchivo)
+		matrix_t *leerMatriz(const char *rutaArchivo)
 		{
 			std::vector<unsigned char> rpcOut;
 			std::vector<unsigned char> rpcIn;
@@ -95,7 +95,7 @@ class multMatrix_stub
 
 		
 		// Escribir la matriz
-		void escribirMatriz(matrix_t *matriz, const std::string &rutaArchivo)
+		void escribirMatriz(matrix_t *matriz, const char *rutaArchivo)
 		{
 			std::vector<unsigned char> rpcOut;
 			std::vector<unsigned char> rpcIn;
@@ -107,11 +107,11 @@ class multMatrix_stub
 			packMatrix(rpcOut, matriz->data, matriz->rows, matriz->cols);
 
 			//Empaquetar la ruta del archivo
-			int tam = rutaArchivo.length() + 1;
+			int tam = strlen(rutaArchivo) + 1;
 
 			pack(rpcOut, tam);
 			
-			packv(rpcOut, rutaArchivo.data(), tam);
+			packv(rpcOut, rutaArchivo, tam);
 
 			sendMSG(serverConnection.serverId, rpcOut);		
 

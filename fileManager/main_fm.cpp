@@ -71,7 +71,7 @@ int main(void)
 
                 data = (char *)data_string.data();
 
-                int fileLen = data_string.length() + 1;
+                unsigned long int fileLen = data_string.length() + 1;
 
                 fm->writeFile(fileName, data, fileLen);
                 
@@ -104,7 +104,7 @@ int main(void)
                 data = nullptr;
                 fileLen = 0;
 
-                int fileLen = data_string.length() + 1;
+                unsigned long int fileLen = data_string.length() + 1;
 
                 fm->readFile(fileName, data, fileLen);
             }break;

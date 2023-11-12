@@ -71,21 +71,21 @@ inline void packMatrix(std::vector<unsigned char> &packet, T *data, int rows, in
 }
 
 // ENVIAR UNA CADENA  ------------------------------------------------------------------
-void send_cadena(int id, const std::string &dato, operacionesEnum op)
+void send_cadena(int id, const char *dato, operacionesEnum op)
 {
-	//Quiero que me empaquete solamente el tamaño de la cadena y su contenido
+	// Quiero que me empaquete solamente el tamaño de la cadena y su contenido
 	std::vector<unsigned char> rpcOut;
 	std::vector<unsigned char> rpcIn;
 
-	//Empaquetar la operacion
+	// Empaquetar la operacion
 	pack(rpcOut, op);
 
 	// Empaquetar el tamaño de la cadena
-	int tam = dato.length() + 1;
+	int tam = strlen(dato) + 1;
 	pack(rpcOut, tam);
 
 	// Empaquetar la cadena
-	packv(rpcOut, dato.data(), tam);
+	packv(rpcOut, dato, tam);
 
 	// Enviar el tamaño de la cadena y la cadena
 	sendMSG(id, rpcOut);
