@@ -129,6 +129,7 @@ class FileManager_Imp {
                         pack(rpcOut, (unsigned char)MSG_OK);
 
                         pack(rpcOut, dataLength);
+                        
                         packv(rpcOut, data, dataLength);
 
                         delete[] data;

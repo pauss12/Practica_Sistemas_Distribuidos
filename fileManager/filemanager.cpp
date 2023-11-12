@@ -69,8 +69,14 @@ void FileManager::freeListedFiles(vector<string*>* fileList)
 
 void FileManager::readFile(char* fileName, char* &data, unsigned long int & dataLength)
 {
-    string path=this->dirPath+"/"+string(fileName);
-    FILE* f=fopen(path.c_str(),"r");
+
+    std::string path = this->dirPath;
+
+    // Añado el pop back porque tenia un caracter nulo al final del path y me estaba terminando la cadena
+    path.pop_back();
+    path.append(fileName);
+
+    FILE *f = fopen(path.c_str(), "r");
 
     fseek(f, 0L, SEEK_END);
     dataLength= ftell(f);

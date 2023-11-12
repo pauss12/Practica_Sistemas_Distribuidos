@@ -52,7 +52,7 @@
 class FileManager_Stub
 {
     private:
-        //std::string ip = "54.157.164.116";
+        // std::string ip = "172.31.56.112";
         std::string ip = "127.0.0.1";
         int port = 60000;
         connection_t serverConnection;
@@ -76,8 +76,6 @@ class FileManager_Stub
             packv(rpcOut, path.c_str(), tam);
 
             sendMSG(serverConnection.serverId, rpcOut);
-
-            std::cout << "Enviando constructor\n";
 
             recvMSG(serverConnection.serverId, rpcIn);
 
@@ -181,10 +179,9 @@ class FileManager_Stub
             dataLength = unpack<unsigned long int>(rpcIn);
             data = new char[dataLength];
 
-            for (unsigned long int i = 0; i < dataLength; i++)
-            {
-                data[i] = rpcIn[i];
-            }
+            unpackv(rpcIn, data, dataLength);
+
+            std::cout << "Data: " << data << std::endl;
         };
 
         // WRITE FILE --------
