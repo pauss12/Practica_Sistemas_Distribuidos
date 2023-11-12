@@ -29,7 +29,6 @@ int main(void)
 
         mostrarComandos();
         scanf("%d", &opcion);
-
         while (getchar() != '\n');
 
         switch (opcion)
@@ -108,9 +107,9 @@ int main(void)
                 printf("Saliendo...\n");
                 
                 //Cerrar la conexion
-                closeConnection(fm.serverConnection.serverId);
+                ~FileManager_Stub();
                 break;
-
+                
             }break;
 
             default:

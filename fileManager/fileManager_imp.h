@@ -62,18 +62,10 @@ class FileManager_Imp {
                 case opDestructor:
                 {
 
-                    if (fileManager != nullptr) {
-
-                        delete fileManager;
-                        fileManager = nullptr;
-
-                        pack(rpcOut, (unsigned char)MSG_OK);
-
-                    } else {
-
-                        pack(rpcOut, (unsigned char)MSG_NOK);
-                    }
-
+                    delete fileManager;
+                    fileManager = nullptr;
+                    pack(rpcOut, (unsigned char)MSG_OK);
+                    
                 }break;
 
                 case opListFiles:
@@ -141,8 +133,7 @@ class FileManager_Imp {
                     else
                     {
 
-                        std::cout << "Error: no hay una instancia de FileManager\n"
-                                  << std::endl;
+                        std::cout << "Error: no hay una instancia de FileManager\n" << std::endl;
                         pack(rpcOut, (unsigned char)MSG_NOK);
                     }
                 }

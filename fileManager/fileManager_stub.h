@@ -62,7 +62,8 @@ class FileManager_Stub
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n" << std::endl;
             }
 
-            close(serverConnection.serverId);
+            closeConnection(serverConnection.serverId);
+            
         };
 
         //LISTAR FICHEROS --------------------------------------
