@@ -105,10 +105,7 @@ int main(void)
             case 4:
             {
                 printf("Saliendo...\n");
-
-                //Llamar al destructor
-                fm->~FileManager_Stub();
-
+                delete fm;
                 break;
 
             }break;

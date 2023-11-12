@@ -18,8 +18,9 @@ void atiendeCliente(int clientId){
 		imp.recibeOp();
 		
 	}while(!imp.connectionClosed());
-	//Va a estar en el while hasta que se invoque al destructor
 	
+	//Va a estar en el while hasta que se invoque al destructor
+
 }
 
 
@@ -27,19 +28,19 @@ int main(int argc, char** argv)
 {
 	//iniciar un servidor
     auto serverSocket=initServer(60000);
-	//mientras haya clientes
-    while(1){
+	// mientras haya clientes
+	// esperar conexiones en puerto
+	while (!checkClient())
+	{
+		usleep(100);
+	}
 
-		//esperar conexiones en puerto
-         while(!checkClient()){
-             usleep(100);
-        }
-		
-		//resolver identificador Cliente
-       int clientId=getLastClientID();
-	   std::thread *th = new std::thread(atiendeCliente, clientId);
-	   th->join();
-    }
-    close(serverSocket);
+	// resolver identificador Cliente
+	int clientId = getLastClientID();
+	std::thread *th = new std::thread(atiendeCliente, clientId);
+	th->join();
+	delete th;
+
+	close(serverSocket);
     return 0;
 }

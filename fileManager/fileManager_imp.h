@@ -20,7 +20,7 @@ class FileManager_Imp {
         FileManager_Imp(int clientId) : clientId(clientId){};
 
         //Destructor de fileManager_Imp
-        ~FileManager_Imp(){ delete fileManager; };
+        ~FileManager_Imp() { delete fileManager; };
 
         bool connectionClosed() {
             return fileManager == nullptr;
@@ -65,7 +65,7 @@ class FileManager_Imp {
                     delete fileManager;
                     fileManager = nullptr;
                     pack(rpcOut, (unsigned char)MSG_OK);
-                    
+
                 }break;
 
                 case opListFiles:

@@ -57,12 +57,14 @@ class FileManager_Stub
 
             recvMSG(serverConnection.serverId, rpcIn);
 
-            if (rpcIn[0] != MSG_OK)
+            unsigned char ok = unpack<unsigned char>(rpcIn);
+
+            if (ok != MSG_OK)
             {
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n" << std::endl;
             }
 
-            close(serverConnection.serverId);
+            closeConnection(serverConnection.serverId);
 
         };
 
