@@ -155,6 +155,7 @@ class FileManager_Stub
             return fileList;
         };
 
+        // READ FILE ---------
         void readFile(std::string &fileName, char *data, unsigned long int dataLength)
         {
             std::vector<unsigned char> rpcOut;
@@ -162,12 +163,14 @@ class FileManager_Stub
 
             pack(rpcOut, opReadFile);
 
+            //Empaquetar el nombre del fichero que se quiere leer
             int tam = fileName.length() + 1;
             pack(rpcOut, tam);
             packv(rpcOut, fileName.data(), tam);
 
             sendMSG(serverConnection.serverId, rpcOut);
 
+            //Recibir el ok y la informacion del fichero
             recvMSG(serverConnection.serverId, rpcIn);
 
             unsigned char ok = unpack<unsigned char>(rpcIn);
@@ -186,6 +189,7 @@ class FileManager_Stub
             }
         };
 
+        // WRITE FILE --------
         void writeFile(const std::string fileName, char *data, unsigned long int dataLength)
         {
             std::vector<unsigned char> rpcOut;
@@ -193,47 +197,25 @@ class FileManager_Stub
 
             pack(rpcOut, opWriteFile);
 
-            //Empaquetar el nombre del fichero que se va a crear en el server
             int tam = fileName.length() + 1;
             pack(rpcOut, tam);
 
-            std::cout << "Empaquetado el tamaño del nombre del fichero\n" << std::endl;
-
             packv(rpcOut, fileName.c_str(), tam);
 
-            std::cout << "Empaquetado el nombre del fichero\n" << std::endl;
-
-            //Empaquetar el dataLength
             pack(rpcOut, dataLength);
 
-            std::cout << "Empaquetado el tamaño de los datos\n" << std::endl;
-
-            // Empaquetar el data
             packv(rpcOut, data, dataLength);
 
-            std::cout << "Empaquetado los datos\n" << std::endl;
-
-            //Mandarlo al server
             sendMSG(serverConnection.serverId, rpcOut);
 
-            std::cout << "Enviado el mensaje\n" << std::endl;
-
-            //Recibir el ok
             recvMSG(serverConnection.serverId, rpcIn);
 
-            std::cout << "Recibido el mensaje\n" << std::endl;
-
             unsigned char ok = unpack<unsigned char>(rpcIn);
-
-            std::cout << "Desempaquetado el mensaje\n" << std::endl;
 
             if (ok != MSG_OK)
             {
                 std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n" << std::endl;
             }
-
-            std::cout << "ha terminado el writeFile\n" << std::endl;
-
         };
 
         void freeListedFiles(std::vector<std::string*> *fileList)
@@ -246,56 +228,4 @@ class FileManager_Stub
             delete fileList;
         };
 
-        /*
-            ANTIGUA FUNCION, BASARSE EN ELLA
-            --------------------------------------------------------------------
-            unsigned long int tam = fileName.length() + 1;
-
-            std::cout << "Tamaño del nombre del fichero: " << tam << "\n" << std::endl;
-
-            pack(rpcOut, tam);
-
-            std::cout << "Empaquetado el tamaño del nombre del fichero\n" << std::endl;
-
-            packv(rpcOut, fileName.data(), tam);
-
-            std::cout << "Empaquetado el nombre del fichero\n" << std::endl;
-
-            sendMSG(serverConnection.serverId, rpcOut);
-
-            std::cout << "Enviado el mensaje\n" << std::endl;
-
-            recvMSG(serverConnection.serverId, rpcIn);
-
-            std::cout << "Recibido el mensaje\n" << std::endl;
-
-            unsigned char ok = unpack<unsigned char>(rpcIn);
-
-            std::cout << "Desempaquetado el mensaje\n" << std::endl;
-
-            if (ok != MSG_OK)
-            {
-                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n" << std::endl;
-            }
-
-            //Desempaquetar el tamaño de los datos
-            dataLength = unpack<unsigned long int>(rpcIn);
-
-            std::cout << "Desempaquetado el tamaño de los datos\n" << std::endl;
-
-            //Desempaquetar los datos
-            data = new char[dataLength];
-
-            std::cout << "Reservado el tamaño de los datos\n" << std::endl;
-
-            for (unsigned long int i = 0; i < dataLength; i++)
-            {
-                data[i] = rpcIn[i];
-            }
-
-            std::cout << "Desempaquetado los datos\n" << std::endl;
-
-            --------------------------------------------------------------------
-
-        */
 };

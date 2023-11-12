@@ -76,7 +76,6 @@ int main(void)
             case 2:
             {
                 //Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
-
                 std::string fileName;
 
                 //Pedir los datos al usuario por terminal
@@ -106,28 +105,20 @@ int main(void)
 
             case 3:
             {
-                /*
-                --------------------------------------------------------
-                               // PROBARLO EN CASA
-   
-                // Pedir los datos al usuario por terminal
-                std::cout << "Introduce el nombre del fichero: ";
+
+                std::string fileName;
+                //Pedir un archivo remoto al usuario y descargarlo al directorio local
+
+                std::cout << "Introduce el nombre del fichero: " << "\n" << std::endl;
 
                 // Guardar el nombre del fichero en fileName hasta el espacio
                 std::cin >> fileName;
 
                 // Limpiar el buffer
-                while (getchar() != '\n')
-                    ;
-
-                --------------------------------------------------------
-                */
-
-                //Pedir un archivo remoto al usuario y descargarlo al directorio local
-                std::string fileName = "mundo.txt";
-                data_string = "hola mundo";
-
-                data = (char *)data_string.data();
+                while (getchar() != '\n');
+                
+                data = nullptr;
+                fileLen = 0;
 
                 //calcular el tamaño de data
                 int fileLen = data_string.length() + 1;
@@ -139,6 +130,14 @@ int main(void)
             case 4:
             {
                 printf("Saliendo...\n");
+
+                //Liberar memoria
+                delete[] data;
+                fm->freeListedFiles(vfiles);
+
+                //LLamar al destructor
+                delete fm;
+
                 break;
 
             }break;
