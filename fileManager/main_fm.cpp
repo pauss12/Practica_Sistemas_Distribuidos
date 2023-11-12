@@ -1,37 +1,6 @@
 #include <iostream>
 #include "fileManager_Stub.h"
-/*
-int main(int argc,char** argv)
-{
-    FileManager_Stub *fm = new FileManager_Stub("./dirprueba/");
-    
-    std::vector<string *> *vfiles = fm->listFiles();
 
-    std::cout<<"Lista de ficheros en el directorio de prueba:\n";
-
-    for(int i=0; i<vfiles->size(); i++)
-    {
-        std::cout << " --- Fichero: " << vfiles->at(i)->c_str() << endl;
-    }
-    std::cout << "Leyendo el primer fichero del directorio de prueba:\n";
- 
-    char* data=nullptr;
-    unsigned long int fileLen=0;
-    fm->readFile(&(*(vfiles->at(0)))[0], data, fileLen);
-
-  
-    std::cout << "Escribiendo el primer fichero del directorio de prueba:\n";
-    fm->writeFile(&(*(vfiles->at(0)))[0], data, fileLen);
-
-    std::cout << "Liberando lista de ficheros:\n";
-    fm->freeListedFiles(vfiles);
-    std::cout << "Liberando datos de fichero leido:\n";
-
-    delete[] data;
-
-    return 0;
-}
-*/
 void mostrarComandos()
 {
     printf("\nComandos:-------\n");
@@ -47,10 +16,12 @@ int main(void)
     int opcion = 0;
     FileManager_Stub *fm = new FileManager_Stub("./dirprueba/");
 
-    //Variables que necesito
     std::vector<string *> *vfiles = nullptr;
+
     std::string data_string;
+
     char *data = nullptr;
+
     unsigned long int fileLen = 0;
 
     do {
@@ -61,8 +32,7 @@ int main(void)
         switch (opcion)
         {
             case 1:
-            {
-                
+            {   
                 //Listar archivos del directorio remoto
                 vfiles = fm->listFiles();
 
@@ -92,12 +62,9 @@ int main(void)
 
                 data = (char *)data_string.data();
 
-                //calcular el tamaño de data
                 int fileLen = data_string.length() + 1;
 
                 fm->writeFile(fileName, data, fileLen);
-
-                std::cout << "Liberando lista de ficheros:\n";
                 
                 fm->freeListedFiles(vfiles);
 
@@ -109,18 +76,15 @@ int main(void)
                 std::string fileName;
                 //Pedir un archivo remoto al usuario y descargarlo al directorio local
 
-                std::cout << "Introduce el nombre del fichero: " << "\n" << std::endl;
+                std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
 
-                // Guardar el nombre del fichero en fileName hasta el espacio
                 std::cin >> fileName;
 
-                // Limpiar el buffer
                 while (getchar() != '\n');
-                
+
                 data = nullptr;
                 fileLen = 0;
 
-                //calcular el tamaño de data
                 int fileLen = data_string.length() + 1;
 
                 fm->readFile(fileName, data, fileLen);
@@ -130,13 +94,9 @@ int main(void)
             case 4:
             {
                 printf("Saliendo...\n");
-
-                //Liberar memoria
-                delete[] data;
-                fm->freeListedFiles(vfiles);
-
-                //LLamar al destructor
-                delete fm;
+                
+                //Llamar al destructor del cliente
+                fm->~FileManager_Stub();
 
                 break;
 

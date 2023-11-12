@@ -97,8 +97,6 @@ class FileManager_Stub
 
             pack(rpcOut, op);
 
-            std::cout << "Enviando destructor\n" << std::endl;
-
             sendMSG(serverConnection.serverId, rpcOut);
 
             recvMSG(serverConnection.serverId, rpcIn);

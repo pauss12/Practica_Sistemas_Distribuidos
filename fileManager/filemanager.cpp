@@ -95,15 +95,10 @@ void FileManager::readFile(char* fileName, char* &data, unsigned long int & data
 void FileManager::writeFile(char *fileName, char *data, unsigned long dataLength)
 {
     std::string path = this->dirPath;
+
     //Añado el pop back porque tenia un caracter nulo al final del path y me estaba terminando la cadena
     path.pop_back();
     path.append(fileName);
-    /*
-        for (int i = 0; i < hola.length(); i++)
-        {
-            std:cout<< "|" << hola.c_str()[i] << "|" << std::endl;
-        }
-    */
 
     FILE *f = fopen(path.c_str(), "w");
 
