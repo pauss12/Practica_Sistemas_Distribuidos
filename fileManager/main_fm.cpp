@@ -105,11 +105,12 @@ int main(void)
             case 4:
             {
                 printf("Saliendo...\n");
-                
-                //Cerrar la conexion
-                ~FileManager_Stub();
+
+                //Llamar al destructor
+                fm->~FileManager_Stub();
+
                 break;
-                
+
             }break;
 
             default:

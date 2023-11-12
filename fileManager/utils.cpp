@@ -140,7 +140,7 @@ void closeConnection(int clientID){
       delete connection.buffer;
 
     }
-        clientList.erase(clientID);
+    clientList.erase(clientID);
 }
 
 
