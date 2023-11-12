@@ -143,13 +143,11 @@ class FileManager_Imp {
                 {
                     if (fileManager != nullptr) 
                     {
-
-                        std::string fileName;
-
                         int fileNameLength = unpack<int>(rpcIn);
-                        fileName.resize(fileNameLength);
 
-                        unpackv(rpcIn, (char *)fileName.data(), fileNameLength);
+                        char *fileName = new char[fileNameLength];
+
+                        unpackv(rpcIn, fileName, fileNameLength);
 
                         unsigned long int dataLength = unpack<unsigned long int>(rpcIn);
                         char *data = new char[dataLength];
@@ -157,14 +155,14 @@ class FileManager_Imp {
                         unpackv(rpcIn, data, dataLength);
 
                         // Comprobar si el fileName no es nulo y si el data no es nulo
-                        if (fileName.empty() || data == nullptr)
+                        if (fileName == nullptr || data == nullptr)
                         {
                             std::cout << "Error: el nombre del fichero o el contenido del fichero es nulo\n";
                             pack(rpcOut, (unsigned char)MSG_NOK);
-                            return ;
+                            return;
                         }
 
-                        fileManager->writeFile((char *)fileName.data(), data, dataLength);
+                        fileManager->writeFile(fileName, data, dataLength);
 
                         pack(rpcOut, (unsigned char)MSG_OK);
 

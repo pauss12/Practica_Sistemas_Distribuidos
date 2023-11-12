@@ -140,7 +140,7 @@ class FileManager_Stub
             dataLength = unpack<unsigned long int>(rpcIn);
             data = new char[dataLength];
 
-            unpackv(rpcIn, data, dataLength);
+            unpackv(rpcIn, data, dataLength);         
 
             std::cout << "El contenido del fichero [" << fileName << "] es: " << data << std::endl;
 
