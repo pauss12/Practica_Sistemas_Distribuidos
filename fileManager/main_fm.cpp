@@ -66,9 +66,6 @@ int main(void)
 
                 fileName[tam] = '\0';
 
-                //Limpiar el buffer
-                while(getchar() != '\n');
-
                 std::cout << "Introduce el contenido del fichero: ";
                 std::getline(std::cin, data_string);
 
