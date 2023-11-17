@@ -15,15 +15,15 @@ void mostrarComandos()
 int main(void)
 {
     int opcion = 0;
+    std::string data_string;
+    char *data = nullptr;
+    unsigned long int fileLen = 0;
+
+    // Para ver la carpeta del server
     FileManager_Stub *fm = new FileManager_Stub("./dirprueba/");
 
-    std::vector<string *> *vfiles = nullptr;
-
-    std::string data_string;
-
-    char *data = nullptr;
-
-    unsigned long int fileLen = 0;
+    // Para ver la carpeta local
+    FileManager *fm_local = new FileManager("./dirprueba/");
 
     do {
 
@@ -36,46 +36,44 @@ int main(void)
             case 1:
             {   
                 //Listar archivos del directorio remoto
-                vfiles = fm->listFiles();
+                std::vector<std::string *> *vfiles = fm->listFiles();
 
                 for (int i = 0; i < vfiles->size(); i++)
                 {
                     std::cout << " --- Fichero: " << vfiles->at(i)->c_str() << endl;
                 }
 
+                fm->freeListedFiles(vfiles);
+
             }break;
 
             case 2:
             {
-                //Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
-                std::string aux;
+                std::vector<std::string *> *vfiles = fm->listFiles();
 
-                std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
+                // Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
+                std::string fichero;
 
-                // Coger la linea entera
-                std::getline(std::cin, aux);
+                // darle las opciones
+                std::vector<std::string *> *vfiles_local = fm_local->listFiles();
 
-                int tam = aux.size() + 1;
-
-                char *fileName = new char[tam];
-
-                for (int i = 0; i < tam; i++)
+                for (int i = 0; i < vfiles_local->size(); i++)
                 {
-                    fileName[i] = aux[i];
+                    std::cout << " --- Fichero: " << vfiles_local->at(i)->c_str() << endl;
                 }
 
-                fileName[tam] = '\0';
+                std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
+                std::cin >> fichero;
 
-                std::cout << "Introduce el contenido del fichero: ";
-                std::getline(std::cin, data_string);
+                fm_local->readFile((char *)fichero.data(), data, fileLen);
 
-                data = (char *)data_string.data();
+                std::cout << "Pasando el archivo [ " << fichero.data() << "] al servidor "
+                          << "\n"
+                          << std::endl;
+                fm->writeFile((char *)fichero.data(), data, fileLen);
 
-                unsigned long int fileLen = data_string.length() + 1;
-
-                fm->writeFile(fileName, data, fileLen);
-                
                 fm->freeListedFiles(vfiles);
+                fm_local->freeListedFiles(vfiles_local);
 
             }break;
 
@@ -107,6 +105,7 @@ int main(void)
                 unsigned long int fileLen = data_string.length() + 1;
 
                 fm->readFile(fileName, data, fileLen);
+                
             }break;
 
             case 4:
