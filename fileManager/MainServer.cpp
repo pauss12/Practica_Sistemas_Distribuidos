@@ -20,7 +20,6 @@ void atiendeCliente(int clientId){
 	}while(!imp.connectionClosed());
 	
 	//Va a estar en el while hasta que se invoque al destructor
-
 }
 
 

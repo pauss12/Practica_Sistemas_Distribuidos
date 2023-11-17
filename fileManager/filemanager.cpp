@@ -73,6 +73,7 @@ void FileManager::readFile(char* fileName, char* &data, unsigned long int & data
     std::string path = this->dirPath;
 
     // Añado el pop back porque tenia un caracter nulo al final del path y me estaba terminando la cadena
+    path.pop_back();
     path.append(fileName);
 
     FILE *f = fopen(path.c_str(), "r");

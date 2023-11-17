@@ -49,9 +49,9 @@ int main(void)
 
             case 2:
             {
+
                 std::vector<std::string *> *vfiles = fm->listFiles();
 
-                // Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
                 std::string fichero;
 
                 // darle las opciones
@@ -62,6 +62,7 @@ int main(void)
                     std::cout << " --- Fichero: " << vfiles_local->at(i)->c_str() << endl;
                 }
 
+                // Pedir el nombre de un archivo al usuario y subirlo al directorio remoto
                 std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
                 std::cin >> fichero;
 
@@ -74,38 +75,20 @@ int main(void)
 
                 fm->freeListedFiles(vfiles);
                 fm_local->freeListedFiles(vfiles_local);
-
-            }break;
+            }
+            break;
 
             case 3:
             {
 
                 // Pedir el nombre de un archivo al usuario y descargarlo del directorio remoto
-                std::string aux;
+                std::string fileName;
 
                 std::cout << "\nIntroduce el nombre del fichero: " << std::endl;
-
-                //Coger la linea entera
-                std::getline(std::cin, aux);
-
-                int tam = aux.size() + 1;
-
-                char *fileName = new char[tam];
-
-                for (int i = 0; i < tam; i++)
-                {
-                    fileName[i] = aux[i];
-                }
-
-                fileName[tam] = '\0';
-
-                data = nullptr;
-                fileLen = 0;
-
-                unsigned long int fileLen = data_string.length() + 1;
-
-                fm->readFile(fileName, data, fileLen);
+                std::cin >> fileName;
                 
+                fm->readFile((char *)fileName.data(), data, fileLen);
+
             }break;
 
             case 4:

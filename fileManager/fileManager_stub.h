@@ -120,44 +120,46 @@ class FileManager_Stub
 
             pack(rpcOut, opReadFile);
 
+            // Empaquetar el nombre del fichero que se quiere leer
             int tam = strlen(fileName) + 1;
 
             pack(rpcOut, tam);
+
             packv(rpcOut, fileName, tam);
 
             sendMSG(serverConnection.serverId, rpcOut);
 
-            //Recibir el ok y la informacion del fichero
+            // Recibir el ok y la informacion del fichero
             recvMSG(serverConnection.serverId, rpcIn);
 
             unsigned char ok = unpack<unsigned char>(rpcIn);
 
             if (ok != MSG_OK)
             {
-                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n" << std::endl;
+                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n"
+                          << std::endl;
             }
-            
+
             dataLength = unpack<unsigned long int>(rpcIn);
             data = new char[dataLength];
 
             unpackv(rpcIn, data, dataLength);
 
             std::cout << "El contenido del fichero [" << fileName << "] es: " << data << std::endl;
-
         };
 
         // WRITE FILE --------
-        void writeFile(const std::string fileName, char *data, unsigned long int dataLength)
+        void writeFile(char *fileName, char *data, unsigned long int dataLength)
         {
             std::vector<unsigned char> rpcOut;
             std::vector<unsigned char> rpcIn;
 
             pack(rpcOut, opWriteFile);
 
-            int tam = fileName.length() + 1;
+            int tam = strlen(fileName) + 1;
             pack(rpcOut, tam);
 
-            packv(rpcOut, fileName.c_str(), tam);
+            packv(rpcOut, fileName, tam);
 
             pack(rpcOut, dataLength);
 
@@ -171,7 +173,8 @@ class FileManager_Stub
 
             if (ok != MSG_OK)
             {
-                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n" << std::endl;
+                std::cout << "ERROR " << __FILE__ << ":" << __LINE__ << "\n"
+                          << std::endl;
             }
         };
 
