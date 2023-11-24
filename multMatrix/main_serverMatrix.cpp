@@ -26,18 +26,26 @@ int main(int argc, char** argv)
 {
 	//iniciar un servidor
     auto serverSocket=initServer(60000);
-
-	// esperar conexiones en puerto
-	while (!checkClient())
+	if (serverSocket == -1)
 	{
-		usleep(1000);
+		std::cout << "Error al iniciar servidor" << std::endl;
+		return -1;
 	}
 
-	// resolver identificador Cliente
-	int clientId = getLastClientID();
-	std::thread *th = new std::thread(atiendeCliente, clientId);
-	th->join();
-	
+	while (1)
+	{
+		// esperar conexiones en puerto
+		while (!checkClient())
+		{
+			usleep(1000);
+		}
+
+		// resolver identificador Cliente
+		int clientId = getLastClientID();
+		std::thread *th = new std::thread(atiendeCliente, clientId);
+		th->join();
+	}
+
 	close(serverSocket);
     return 0;
 }
