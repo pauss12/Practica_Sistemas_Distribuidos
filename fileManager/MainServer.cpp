@@ -22,24 +22,30 @@ void atiendeCliente(int clientId){
 	//Va a estar en el while hasta que se invoque al destructor
 }
 
-
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-	//iniciar un servidor
-    auto serverSocket=initServer(60000);
-	// mientras haya clientes
-	// esperar conexiones en puerto
-	while (!checkClient())
+	// iniciar un servidor
+	auto serverSocket = initServer(60000);
+	if (serverSocket == -1)
 	{
-		usleep(100);
+		std::cout << "Error al iniciar servidor" << std::endl;
+		return -1;
 	}
 
-	// resolver identificador Cliente
-	int clientId = getLastClientID();
-	std::thread *th = new std::thread(atiendeCliente, clientId);
-	th->join();
-	delete th;
+	while (1)
+	{
+		// esperar conexiones en puerto
+		while (!checkClient())
+		{
+			usleep(1000);
+		}
+
+		// resolver identificador Cliente
+		int clientId = getLastClientID();
+		std::thread *th = new std::thread(atiendeCliente, clientId);
+		th->join();
+	}
 
 	close(serverSocket);
-    return 0;
+	return 0;
 }
